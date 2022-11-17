@@ -1,0 +1,147 @@
+
+\documentclass[11pt,a4j]{jreport}
+\renewcommand{\baselinestretch}{1.4}
+\usepackage{comment}
+\usepackage{float}
+\usepackage{color}
+\usepackage{multicol}
+\usepackage[dvipdfmx]{pict2e}
+\usepackage{wrapfig}
+\usepackage{graphicx}
+\usepackage{bm}
+\usepackage{url}
+\usepackage{underscore}
+\usepackage{colortbl}
+\usepackage{tabularx}
+\usepackage{fancyhdr}
+\usepackage{ulem}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage[ipaex]{pxchfon}
+
+
+\usepackage[top=30truemm,bottom=30truemm,left=30truemm,right=30truemm]{geometry}
+
+\begin{document}
+
+\thispagestyle{empty}
+\begin{center}
+\
+\vspace{3cm}
+
+{\huge{Vision Libraryを用いた画像処理を\\
+ハードウェア化することによる性能評価}}
+
+\vspace{9mm}
+
+{\LARGE 指導教員}
+
+\vspace{5mm}
+
+{\LARGE 高橋 寛 教授}
+
+\vspace{4mm}
+
+{\LARGE 甲斐 博 准教授}
+
+\vspace{4mm}
+
+{\LARGE 王森レイ 講師}
+
+\vspace{20mm}
+
+{\LARGE 令和 5 年 1 月 4 日提出}\\
+
+\vspace{20mm}
+
+{\LARGE 愛媛大学工学部工学科}\\
+
+\vspace{4mm}
+
+{\LARGE 応用情報工学コース}\\
+
+\vspace{4mm}
+
+{\LARGE 計算機/ソフトウェアシステム研究室}\\
+
+\vspace{18mm}
+
+{\huge 西川　竜矢}\\
+
+\end{center}
+
+\thispagestyle{empty}
+\clearpage
+
+% 目次の表示
+\tableofcontents
+
+%=====================================================================================
+\pagestyle{fancy}
+\lhead{\rightmark}
+\renewcommand{\chaptermark}[1]{\markboth{第\ \normalfont\thechapter\ 章~~#1}{}}
+%=====================================================================================
+
+\chapter{序論} %章
+
+\section{研究背景}
+
+近年，日常生活を送るうえで多くの場面でIoTが活用されている．また，エッジAIの登場により，
+IoT機器における処理全体に要する時間の短縮に成功している．その中でも，自動車の歩行者検知や
+製造業における外観検査などに使われている技術に物体検出がある．物体検出には高いリアルタイム性
+が求められているが，IoT機器におけるエッジデバイスはPCと比較するとCPU性能やメモリ容量といったリソースが劣る．
+こうした現状から，限られたリソースの中で，処理速度やリソース使用量などのパフォーマンスを
+どれだけ向上させられるかが課題となっている．
+
+また，近年様々な電子機器に搭載されているFPGA（Field Programmable Gate Array）は集積回路の一種であり，
+現場で論理回路の構成を書き換え可能である点が大きな特徴である．FPGAはCPUと比較しても大量のデータを高速に処理し，
+さらに消費電力が低いという利点がある．以上の点から，リアルタイム性を重要視しているエッジデバイスでの画像処理
+に対してFPGAを用いることは，先に述べた課題に対する有効的な解決策となるといえる．
+
+
+\section{論文の構成}
+
+%本論文ではエッジコンピューティングにおける物体検出の入力画像に対する前処理の高速化について
+本論文の構成について述べる．第1章では研究背景について述べる．第2章では本論文を読むにあたって必要となる予備知識
+について，画像処理，FPGAおよび開発ツールに分けて述べる．第3章では
+
+\chapter{準備}
+
+\section{画像処理}
+\subsection{物体検出}
+\subsection{画像処理の種類}
+
+\section{FPGA}
+\subsection{FPGA概要}
+\subsection{比較}
+\subsection{Ultra96v2}
+
+\section{開発ツール}
+\subsection{Vivado}
+\subsection{Vitis}
+
+\chapter{画像処理アプリケーションの実装}
+\section{開発フロー}
+\chapter{評価実験}
+\section{実験方法}
+\section{実験結果}
+\section{考察}
+
+\chapter{まとめ}
+
+%=====================================================================================
+\chapter*{謝辞} %章を付けずにタイトル表示
+\addcontentsline{toc}{chapter}{謝辞} %章立てせずに目次に追加するおまじない
+本論文を作成するにあたり、---- みなさまに感謝の意を表します．
+
+%=====================================================================================
+\chapter*{参考文献}
+\addcontentsline{toc}{chapter}{参考文献} %章立てせずに目次に追加するおまじない
+\renewcommand{\bibname}{参考文献} %これがないと，タイトルが「関連図書」になってしまう
+\bibliography{bibtexファイル名} %bibtexファイルの読み込み
+\bibliographystyle{junsrt} %本文に\cite{}を入れることで，参考文献表示
+
+\end{document}

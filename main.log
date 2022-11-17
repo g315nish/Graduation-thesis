@@ -1,0 +1,276 @@
+This is e-pTeX, Version 3.14159265-p3.8.3-191112-2.6 (utf8.sjis) (TeX Live 2019/W32TeX) (preloaded format=platex 2019.12.11)  10 NOV 2022 17:56
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**c:/Users/tatsu/GT/main
+(c:/Users/tatsu/GT/main.tex
+pLaTeX2e <2019-10-01>+1 (based on LaTeX2e <2019-10-01> patch level 3)
+(c:/w32tex/share/texmf-dist/tex/platex/jsclasses/jsarticle.cls
+Document Class: jsarticle 2019/07/25 jsclasses (okumura, texjporg)
+\jsc@mpt=\dimen118
+\jsc@mmm=\dimen119
+\jsc@smallskipamount=\skip41
+LaTeX Info: Redefining \rmfamily on input line 466.
+LaTeX Info: Redefining \sffamily on input line 469.
+LaTeX Info: Redefining \ttfamily on input line 472.
+LaTeX Info: Redefining \textmc on input line 476.
+LaTeX Info: Redefining \textgt on input line 478.
+\symmincho=\mathgroup4
+LaTeX Font Info:    Overwriting symbol font `mincho' in version `bold'
+(Font)                  JY1/mc/m/n --> JY1/gt/m/n on input line 540.
+LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
+(Font)              scaled to size 9.60999pt on input line 731.
+LaTeX Font Info:    Font shape `JY1/mc/m/n' will be
+(Font)              scaled to size 9.60999pt on input line 731.
+\fullwidth=\dimen120
+LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
+(Font)              scaled to size 7.68799pt on input line 884.
+LaTeX Font Info:    Font shape `JY1/mc/m/n' will be
+(Font)              scaled to size 7.68799pt on input line 884.
+\c@part=\count83
+\c@section=\count84
+\c@subsection=\count85
+\c@subsubsection=\count86
+\c@paragraph=\count87
+\c@subparagraph=\count88
+\@abstractbox=\box43
+\c@figure=\count89
+\c@table=\count90
+\abovecaptionskip=\skip42
+\belowcaptionskip=\skip43
+\jsc@tocl@width=\dimen121
+\@lnumwidth=\dimen122
+\bibindent=\dimen123
+(c:/w32tex/share/texmf-dist/tex/platex/jsclasses/jslogo.sty
+Package: jslogo 2019/07/25 okumura, texjporg
+LaTeX Info: Redefining \TeX on input line 94.
+LaTeX Info: Redefining \LaTeX on input line 147.
+LaTeX Info: Redefining \LaTeXe on input line 200.
+)
+\heisei=\count91
+) (c:/w32tex/share/texmf-dist/tex/latex/geometry/geometry.sty
+Package: geometry 2020/01/02 v5.9 Page Geometry
+ (c:/w32tex/share/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks15
+) (c:/w32tex/share/texmf-dist/tex/generic/iftex/ifvtex.sty
+Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
+ (c:/w32tex/share/texmf-dist/tex/generic/iftex/iftex.sty
+Package: iftex 2019/11/07 v1.0c TeX engine tests
+))
+\Gm@cnth=\count92
+\Gm@cntv=\count93
+\c@Gm@tempcnt=\count94
+\Gm@bindingoffset=\dimen124
+\Gm@wd@mp=\dimen125
+\Gm@odd@mp=\dimen126
+\Gm@even@mp=\dimen127
+\Gm@layoutwidth=\dimen128
+\Gm@layoutheight=\dimen129
+\Gm@layouthoffset=\dimen130
+\Gm@layoutvoffset=\dimen131
+\Gm@dimlist=\toks16
+ (c:/w32tex/share/texmf-dist/tex/latex/geometry/geometry.cfg)) (c:/w32tex/share/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2017/06/01 v1.1a Enhanced LaTeX Graphics (DPC,SPQR)
+ (c:/w32tex/share/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2019/11/01 v1.3d Standard LaTeX Graphics (DPC,SPQR)
+ (c:/w32tex/share/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 2016/01/03 v1.10 sin cos tan (DPC)
+) (c:/w32tex/share/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: dvipdfmx.def on input line 105.
+ (c:/w32tex/share/texmf-dist/tex/latex/graphics-def/dvipdfmx.def
+File: dvipdfmx.def 2017/06/24 v5.0g Graphics/color driver for dvipdfmx
+))
+\Gin@req@height=\dimen132
+\Gin@req@width=\dimen133
+) (c:/w32tex/share/texmf-dist/tex/latex/here/here.sty) (c:/w32tex/share/texmf-dist/tex/latex/float/float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count95
+\float@exts=\toks17
+\float@box=\box44
+\@float@everytoks=\toks18
+\@floatcapt=\box45
+) (c:/w32tex/share/texmf-dist/tex/latex/multirow/multirow.sty
+Package: multirow 2019/05/31 v2.5 Span multiple rows of a table
+\multirow@colwidth=\skip44
+\multirow@cntb=\count96
+\multirow@dima=\skip45
+\bigstrutjot=\dimen134
+) (c:/w32tex/share/texmf-dist/tex/latex/tools/longtable.sty
+Package: longtable 2019/02/06 v4.12 Multi-page Table package (DPC)
+\LTleft=\skip46
+\LTright=\skip47
+\LTpre=\skip48
+\LTpost=\skip49
+\LTchunksize=\count97
+\LTcapwidth=\dimen135
+\LT@head=\box46
+\LT@firsthead=\box47
+\LT@foot=\box48
+\LT@lastfoot=\box49
+\LT@cols=\count98
+\LT@rows=\count99
+\c@LT@tables=\count100
+\c@LT@chunks=\count101
+\LT@p@ftn=\toks19
+)
+! Undefined control sequence.
+l.36 \lstset
+            {
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+! LaTeX Error: Missing \begin{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.37     l
+          anguage=C++,       % 言語設定
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
+(Font)              scaled to size 6.72699pt on input line 44.
+LaTeX Font Info:    Font shape `JY1/mc/m/n' will be
+(Font)              scaled to size 6.72699pt on input line 44.
+LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
+(Font)              scaled to size 8.64899pt on input line 54.
+LaTeX Font Info:    Font shape `JY1/mc/m/n' will be
+(Font)              scaled to size 8.64899pt on input line 54.
+LaTeX Font Info:    Font shape `JT1/gt/m/n' will be
+(Font)              scaled to size 8.64899pt on input line 54.
+LaTeX Font Info:    Font shape `JY1/gt/m/n' will be
+(Font)              scaled to size 8.64899pt on input line 54.
+No file main.aux.
+\openout1 = `main.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
+LaTeX Font Info:    Checking defaults for JY1/mc/m/n on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
+LaTeX Font Info:    Checking defaults for JT1/mc/m/n on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
+*geometry* detected driver: dvipdfm
+*geometry* verbose mode - [ preamble ] result:
+* driver: dvipdfm
+* paper: <default>
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: 
+* h-part:(L,W,R)=(51.96848pt, 441.73026pt, 51.96848pt)
+* v-part:(T,H,B)=(77.95271pt, 615.8239pt, 77.95271pt)
+* \paperwidth=597.49146pt
+* \paperheight=845.04272pt
+* \textwidth=569.05511pt
+* \textheight=615.8239pt
+* \oddsidemargin=-56.9055pt
+* \evensidemargin=-20.30151pt
+* \topmargin=-27.54541pt
+* \headheight=20.0pt
+* \headsep=13.22813pt
+* \topskip=12.76073pt
+* \footskip=25.98886pt
+* \marginparwidth=18.49374pt
+* \marginparsep=18.49374pt
+* \columnsep=18.49374pt
+* \skip\footins=16.0pt plus 5.0pt minus 2.0pt
+* \hoffset=6.27573pt
+* \voffset=6.27573pt
+* \mag=1095
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+(./title.tex
+
+! LaTeX Error: Can be used only in preamble.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.1 \documentstyle
+                  [a4j,12pt]{jarticle}
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+! LaTeX Error: Can be used only in preamble.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.5 \begin{document}
+                    
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+! LaTeX Error: Can be used only in preamble.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.7 \begin{document}
+                    
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
+(Font)              scaled to size 16.60605pt on input line 12.
+LaTeX Font Info:    Font shape `JY1/mc/m/n' will be
+(Font)              scaled to size 16.60605pt on input line 12.
+LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
+(Font)              scaled to size 13.83836pt on input line 18.
+LaTeX Font Info:    Font shape `JY1/mc/m/n' will be
+(Font)              scaled to size 13.83836pt on input line 18.
+LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
+(Font)              scaled to size 19.9311pt on input line 50.
+LaTeX Font Info:    Font shape `JY1/mc/m/n' will be
+(Font)              scaled to size 19.9311pt on input line 50.
+
+Overfull \vbox (19.05116pt too high) has occurred while \output is active []
+
+ [1
+
+] (./main.aux) ) )
+(\end occurred inside a group at level 2)
+
+### semi simple group (level 2) entered at line 7 (\begingroup)
+### semi simple group (level 1) entered at line 5 (\begingroup)
+### bottom level 
+Here is how much of TeX's memory you used:
+ 1571 strings out of 492749
+ 20198 string characters out of 6141886
+ 97745 words of memory out of 5000000
+ 6055 multiletter control sequences out of 15000+600000
+ 11253 words of font info for 52 fonts, out of 8000000 for 9000
+ 934 hyphenation exceptions out of 8191
+ 30i,4n,25p,258b,167s stack positions out of 5000i,500n,10000p,500000b,80000s
+
+Output written on main.dvi (1 page, 1400 bytes).
