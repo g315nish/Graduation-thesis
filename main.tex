@@ -22,6 +22,26 @@
 \usepackage{xcolor}
 \usepackage[ipaex]{pxchfon}
 
+\usepackage{listings,jvlisting}
+\lstset{
+  basicstyle={\ttfamily},
+  identifierstyle={\small},
+  commentstyle={\smallitshape},
+  keywordstyle={\small\bfseries},
+  ndkeywordstyle={\small},
+  stringstyle={\small\ttfamily},
+  frame={tb},
+  breaklines=true,
+  columns=[l]{fullflexible},
+  numbers=left,
+  xrightmargin=0zw,
+  xleftmargin=3zw,
+  numberstyle={\scriptsize},
+  stepnumber=1,
+  numbersep=1zw,
+  lineskip=-0.5ex
+}
+\renewcommand{\lstlistingname}{プログラム}
 
 \usepackage[top=30truemm,bottom=30truemm,left=30truemm,right=30truemm]{geometry}
 
@@ -32,8 +52,8 @@
 \
 \vspace{3cm}
 
-{\huge{Vision Libraryを用いた画像処理を\\
-ハードウェア化することによる性能評価}}
+{\huge{Vitis Vision Libraryを用いた前処理の\\
+ハードウェア実装と性能評価}}
 
 \vspace{9mm}
 
@@ -92,39 +112,224 @@
 近年，日常生活を送るうえで多くの場面でIoTが活用されている．また，エッジAIの登場により，
 IoT機器における処理全体に要する時間の短縮に成功している．その中でも，自動車の歩行者検知や
 製造業における外観検査などに使われている技術に物体検出がある．物体検出には高いリアルタイム性
-が求められているが，IoT機器におけるエッジデバイスはPCと比較するとCPU性能やメモリ容量といったリソースが劣る．
-こうした現状から，限られたリソースの中で，処理速度やリソース使用量などのパフォーマンスを
-どれだけ向上させられるかが課題となっている．
+が求められているが，IoT機器におけるエッジデバイスは推論モデルの学習環境に用いられるPCと比較すると
+CPU性能やメモリ容量といったリソースが劣る．こうした現状から，限られたリソースの中で，
+処理速度やリソース使用量などのパフォーマンスをどれだけ向上させられるかが課題となっている．
 
-また，近年様々な電子機器に搭載されているFPGA（Field Programmable Gate Array）は集積回路の一種であり，
-現場で論理回路の構成を書き換え可能である点が大きな特徴である．FPGAはCPUと比較しても大量のデータを高速に処理し，
-さらに消費電力が低いという利点がある．以上の点から，リアルタイム性を重要視しているエッジデバイスでの画像処理
-に対してFPGAを用いることは，先に述べた課題に対する有効的な解決策となるといえる．
+また，物体検出に関する研究では，推論処理における高速化が盛んである．その高速化手法は，
+主流な方法である量子化をはじめ，レイヤフュージョン，デバイス最適化，マルチスレッド化など
+さまざまである．しかし，物体検出の流れとしてはじめに入力画像に対する前処理の工程があり，
+この工程における高速化の研究は少ない．実際に物体検出の前処理と推論処理では，推論処理に要する
+処理時間の方が前処理に要する処理時間より大きくなるのは周知の事実ではあるが，今後さらに
+推論処理の高速化が進んでくると，高速化された推論処理に対して，その前に処理速度の遅い前処理の工程が
+入ってくるため，折角高速化した推論処理のパフォーマンスを最大限に発揮できなくなってしまう恐れがある．
+こうした点から本研究では推論処理の前処理の工程に対して高速化を進めていく．
+
+加えて，エッジコンピューティングにおいて注目すべきはそのエッジデバイスである．
+FPGA（Field Programmable Gate Array）は集積回路の一種であり，様々なエッジデバイスに搭載され用いられている．
+その大きな特徴として現場で論理回路の構成を書き換え可能である点が挙げられ，こうした特徴から，FPGAはCPUと比較しても
+大量のデータを高速に処理し，さらに消費電力が低いという利点がある．以上の点から，リアルタイム性を重要視している
+エッジデバイスでの画像処理に対してFPGAを用いることは，先に述べた課題に対する有効的な解決策となるといえる．
 
 
 \section{論文の構成}
 
 %本論文ではエッジコンピューティングにおける物体検出の入力画像に対する前処理の高速化について
 本論文の構成について述べる．第1章では研究背景について述べる．第2章では本論文を読むにあたって必要となる予備知識
-について，画像処理，FPGAおよび開発ツールに分けて述べる．第3章では
+について，画像処理およびFPGAの観点から説明する．第3章では本研究で扱う画像処理アプリケーションの実装について，
+開発環境，開発フロー及び
 
 \chapter{準備}
 
 \section{画像処理}
 \subsection{物体検出}
-\subsection{画像処理の種類}
+機械学習を活用して画像に映る特定の物体を検出する技術を物体検出と呼ぶ．
+
+
+\subsection{前処理}
+
+% \subsection{前処理の種類}
+% 物体検出における前処理の役割は主に，意味のある特徴量を際立たせること，意味のない特徴量を除去すること，
+% 特徴量を増やすことの3点が挙げられる．この3つの役割を担う具体的な手法を列挙する．
+% \begin{quote}
+%   \begin{itemize}
+%     \item 意味のある特徴量を際立たせる
+%     \begin{quote}
+%       \begin{itemize}
+%         \item グレートスケール変換
+%         \item 2値化
+%         \item 正規化
+%       \end{itemize}
+%     \end{quote}
+%     \item 意味のない特徴量を除去する
+%     \begin{quote}
+%       \begin{itemize}
+%         \item モルフォジー変換
+%         \item ヒストグラム
+%         \item 次元圧縮
+%         \item リサイズ
+%       \end{itemize}
+%     \end{quote}
+%     \item 特徴量を増やす
+%     \begin{quote}
+%       \begin{itemize}
+%         \item 反転
+%         \item 平滑化
+%         \item 明度変更
+%         \item アノテーション
+%       \end{itemize}
+%     \end{quote}
+%   \end{itemize}
+% \end{quote}
+
+\subsection{OpenCV}
+OpenCVとはOpen Source Computer Vision Libraryの略称で，Intelが開発した画像・動画に関する処理機能をまとめた
+オープンソースのライブラリである．
+
+FPGA用の画像データ前処理アプリケーションはVitisというツールで作成するため，Vitisツール専用のライブラリを用いる必要がある．
+そのライブラリが，Xilinxから提供されているVitis Vision Libraryであり，OpenCVの画像処理関数の多くを含んでいる．
 
 \section{FPGA}
 \subsection{FPGA概要}
+FPGAはField Programmable Gate Arrayの略称であり，日本語に直訳すると「現場で構成可能なゲートアレイ」となる．
+ここで言う「ゲートアレイ」とは，ASIC（Application Specific Integrated Circuit）の設計・製造手法のひとつである．
+この手法では，ウェハ―上に標準NANDゲートやNORゲート等の論理回路，単体のトランジスタ，抵抗器などの受動素子といった部品を
+決まった形で配置し，その上に配線を加えることで各部品を配線し半導体回路を完成させる．昨今では専用LSIであるASICの開発に
+数千万円から数億円の初期コストがかかることや，一度製造してしまったLSIの構成は製造後には変更できないなどの問題がある．
+一方でFPGAは「現場で構成可能」という表現からもわかる通り，ユーザの手元でロジックや配線を変更できるというコンセプトを基に
+開発される．現在開発されているFPGAの規模は様々だが，一昔前の専用LSIを超える規模の回路を簡単に構成できるようになってきている．
+また，FPGAとASICなどの専用LSIとの大きな違いとして「製造のための初期コスト」が不要なことも挙げられる．
+
+
 \subsection{比較}
-\subsection{Ultra96v2}
 
-\section{開発ツール}
-\subsection{Vivado}
-\subsection{Vitis}
-
-\chapter{画像処理アプリケーションの実装}
+\chapter{アプリケーションの実装}
+\section{開発環境}
+\begin{quote}
+  \begin{itemize}
+    \item Ubuntu18.04.3 LTS・・・
+    LinuxOSのUbuntuを用いた．開発ツールであるVivado，PetaLinux，Vitisのバージョンに対応させてUbuntuのバージョンは
+    18.04を採用している．
+    \item Vivado-v2020.1・・・
+    Xilinxが提供するハードウェア設計ツール．HDLからビットストリームの生成，FPGAへの書き込みまでの開発における下位の部分
+    を担当する．
+    \item PetaLinux-v2020.1・・・
+    Xilinxが提供するツール．Xilinxのプロセッシングシステム上で組み込みLinuxのソリューションをカスタマイズ，ビルド，
+    およびデプロイするために必要なモノを全て提供する．設計生産性の加速を目的とするこのソリューションは，Xilinxの
+    ハードウェア設計ツールと連動し，Versal，Zynq UltraScale+ MPSoP，Zynq-7000，およびMicroBlaze向けのLinuxシステム
+    の開発を容易にする．
+    \item Vitis-v2020.1・・・
+    Xilinxが提供するVitis統合ソフトウェアプラットフォーム．ツール内容を以下に述べる．
+    \item OpenCV-v3.4.16・・・
+    本研究で扱うVitis-v2020.1が用いるVitis Vision Libraryに対応しているバージョンのOpenCVを用いる．
+    \begin{quote}
+      \begin{itemize}
+        \item アクセラレーションアプリケーションをシームレスに構築するための包括的なコア開発キット
+        \item AMDザイリンクスのFPGAおよびVersa I ACAPハードウェアプラットフォーム向けに最適化された，
+        ハードウェアアクセラレーション用の豊富なオープンソースライブラリ
+        \item 使い慣れた高レベルのフレームワークを利用して直接開発できる，プラグインタイプのドメイン特化開発環境
+        \item 今後さらに拡大する，ハードウェアアクセラレーションパートナー提供のライブラリおよび構築済みアプリケーション
+        のエコシステム
+      \end{itemize}
+    \end{quote}
+    \item Ultra96v2・・・
+    本研究で扱うFPGAボード．Ultra96v2に搭載されているZynq UltraScale+ MPSoCは，プロセッサとFPGAを
+    1チップに搭載しており，機能を以下に述べる．
+    %引用https://www.avnet.com/wps/portal/japan/products/product-highlights/ultra96/
+    \begin{quote}
+      \begin{itemize}
+        \item 高性能かつ大容量プログラムロジックを利用した高帯域な信号・画像処理
+        \item Cortex-A53アプリケーションプロセッサで余裕のあるシステム（OS/GUI）プロセス処理実行
+        \item Cortex-R5でタイミングクリティカルなリアルタイム処理をプログラムロジックと連携処理
+      \end{itemize}
+    \end{quote}
+    以上の機能を持つことからも，自動車，医療，製造業，放送，通信などの幅広い分野で利用されている．
+    %Zynq UltraScale+ MPSoPブロックダイアグラムの画像を挿入してみよう
+  \end{itemize}
+\end{quote}
 \section{開発フロー}
+本研究では物体検出における画像前処理アプリケーションを作成する．
+アプリケーション作成の流れとしてプラットフォームの作成，PSのみを
+利用して処理を行うアプリケーションの作成，PSとPLを用いて処理を
+行うアプリケーションの作成を行う．
+\subsection{プラットフォーム作成}
+\begin{figure}[H]
+  \center
+  \includegraphics[scale = 0.7]{pict/pict1.jpg}
+  \caption{プラットフォーム作成フロー}
+ \end{figure}
+ プラットフォームの作成は図3.1プロットフォーム作成フローに従って行う．
+ また，Ultra96v2向けプラットフォームがavnet社より提供されているので，
+ このプラットフォームを用いても良いのだが，カーネル作成時にライブラリの
+ 追加などを行う必要があるため，avnet社が提供しているプラットフォームの内，
+ ハードウェア構成が構築されているXSAファイルのみを引用する．そのため，
+ 1.HW Componentの工程は省略する．以下に引用するXSAファイルの概要を示す．
+
+ 次に，2.SW Componentの工程に映る．ここではPetalinuxを用いてUltra96v2上で
+ 起動するカーネルの作成を行う．
+
+ 最後に，1.HW Componentと2.SW Componentの工程で得られた成果物を用いて
+ Vitis Target Platformの作成を行う．
+ \subsection{アプリケーション作成(PS)}
+実行時にPSのみを用いて画像の前処理を行うアプリケーションの作成について述べる．
+このアプリケーションのソースコードはPythonで記述しており，
+ファイル名をprepro_PS.pyとし以下に示す．
+\begin{lstlisting}[caption=prepro_PS.py]
+  import glob
+  import sys
+  import time
+  import cv2
+  import numpy as np
+  
+  re_length = 416
+  
+  time_sta = time.time()
+  
+  for i in range(600):
+  
+      img = cv2.imread("./mask_before/Mask_" + str(i+1) + ".jpg")
+  
+      h, w = img.shape[:2]
+  
+      re_h = re_w = re_length/max(h,w)
+  
+      img_resize = cv2.resize(img, dsize=None, fx=re_h, fy=re_w)
+  
+      img_normal = img_resize/255
+  
+  time_end = time.time()
+  t = time_end - time_sta
+  
+  print(str(t))
+\end{lstlisting}
+prepro_PS.pyの概要を以下に述べる．
+1行目から5行目までは必要なモジュールを利用するための記述である．
+7行目の変数re_lengthは入力画像に対してリサイズした後の画像サイズ
+である416pxを定義している．ここでは入力画像の長辺を416pxにリサイズ
+することを想定しており，リサイズ後も長辺と短辺の大きさの比率は変わらない．
+9行目の変数time_staはプログラムの実行開始時刻を取得しており，
+サンプル画像全てに対する処理が終了した時刻を23行目の変数time_end
+で取得している．24行目ではプログラムの終了時刻から開始時刻の値を
+減算することにより，処理時間の計測を行っている．
+最後に11行目から21行目までの画像処理の部分の説明をする．
+前処理を行うサンプル画像の枚数は600枚で行ったので11行目のrangeの中は
+600に指定している．13行目ではopencvを利用した入力画像の取得を行っており，
+続けて15行目で入力画像の縦のサイズ:h，横のサイズ:wを取得している．
+17行目では入力画像を変換する倍率の計算を行っており，リサイズ後の長辺サイズである
+416pxを入力画像の縦，横のピクセルサイズのうち大きい方で除算することにより倍率を計算している．
+19行目のimg_resizeには入力画像をリサイズした後の配列を格納する．
+opencvの関数であるcv2.resizeに対して入力画像imgと17行目で計算した倍率である
+re_hとre_wを引数として渡すことでリサイズ処理を行う．
+21行目のimg_normalは正規化後の画像配列を格納する．正規化とは，
+複数あるデータのうち，そのデータの取り得る最大値と最小値の差で
+各データを除算する．今回は，画像配列に対して正規化を行うため，
+その配列の要素の取り得る範囲は0から255である．そのため，21行目では
+リサイズ後の画像配列であるimg_resizeを255で除算することにより正規化を
+行っている．
+以上の工程を経て，26行目で処理時間の出力を行う．
+
+ \subsection{アプリケーション作成(PS+PL)}
+
 \chapter{評価実験}
 \section{実験方法}
 \section{実験結果}
@@ -135,8 +340,12 @@ IoT機器における処理全体に要する時間の短縮に成功してい�
 %=====================================================================================
 \chapter*{謝辞} %章を付けずにタイトル表示
 \addcontentsline{toc}{chapter}{謝辞} %章立てせずに目次に追加するおまじない
-本論文を作成するにあたり、---- みなさまに感謝の意を表します．
+本研究，論文作成を進めるにあたり，御懇篤な御指導，御鞭撻を賜りました本学高橋寛教授ならびに
+甲斐博准教授，王森レイ講師に深く御礼申し上げます．
 
+また，審査頂いた本学（）教授ならびに（）助教授に深く御礼申し上げます．
+
+最後に，多大な御協力と貴重な御助言を頂いた計算機/ソフトウェアシステム研究室の諸氏に厚く御礼申し上げます．
 %=====================================================================================
 \chapter*{参考文献}
 \addcontentsline{toc}{chapter}{参考文献} %章立てせずに目次に追加するおまじない
