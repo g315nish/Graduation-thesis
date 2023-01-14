@@ -5,9 +5,10 @@
 \usepackage{float}
 \usepackage{color}
 \usepackage{multicol}
-\usepackage[dvipdfmx]{pict2e}
+%\usepackage[dvipdfmx]{pict2e}
 \usepackage{wrapfig}
-\usepackage{graphicx}
+%\usepackage{graphicx}
+\usepackage[dvipdfmx]{graphicx}
 \usepackage{bm}
 \usepackage{url}
 \usepackage{underscore}
@@ -20,6 +21,7 @@
 \usepackage{algorithmic}
 \usepackage{textcomp}
 \usepackage{xcolor}
+\usepackage{booktabs}
 \usepackage[ipaex]{pxchfon}
 
 \usepackage{listings,jvlisting}
@@ -104,7 +106,8 @@
 \lhead{\rightmark}
 \renewcommand{\chaptermark}[1]{\markboth{第\ \normalfont\thechapter\ 章~~#1}{}}
 %=====================================================================================
-
+%
+%========序論=========================================================================
 \chapter{序論} %章
 
 \section{研究背景}
@@ -138,7 +141,8 @@ FPGA（Field Programmable Gate Array）は集積回路の一種であり，様�
 本論文の構成について述べる．第1章では研究背景について述べる．第2章では本論文を読むにあたって必要となる予備知識
 について，画像処理およびFPGAの観点から説明する．第3章では本研究で扱う画像処理アプリケーションの実装について，
 開発環境，開発フロー及び
-
+%
+%========準備=========================================================================
 \chapter{準備}
 
 \section{画像処理}
@@ -202,7 +206,8 @@ FPGAはField Programmable Gate Arrayの略称であり，日本語に直訳す�
 
 
 \subsection{比較}
-
+%
+%========アプリケーションの実装=================================================================
 \chapter{アプリケーションの実装}
 \section{開発環境}
 \begin{quote}
@@ -255,22 +260,98 @@ FPGAはField Programmable Gate Arrayの略称であり，日本語に直訳す�
 \subsection{プラットフォーム作成}
 \begin{figure}[H]
   \center
-  \includegraphics[scale = 0.7]{pict/pict1.jpg}
+  \includegraphics[scale = 0.8]{pict/pict.jpg}
   \caption{プラットフォーム作成フロー}
- \end{figure}
- プラットフォームの作成は図3.1プロットフォーム作成フローに従って行う．
- また，Ultra96v2向けプラットフォームがavnet社より提供されているので，
- このプラットフォームを用いても良いのだが，カーネル作成時にライブラリの
- 追加などを行う必要があるため，avnet社が提供しているプラットフォームの内，
- ハードウェア構成が構築されているXSAファイルのみを引用する．そのため，
- 1.HW Componentの工程は省略する．以下に引用するXSAファイルの概要を示す．
+\end{figure}
+プラットフォームの作成は図3.1プロットフォーム作成フローに従って行う．
+また，Ultra96v2向けプラットフォームがavnet社より提供されているので，
+このプラットフォームを用いても良いのだが，カーネル作成時にライブラリの
+追加などを行う必要があるため，avnet社が提供しているプラットフォームの内，
+ハードウェア構成が構築されているXSAファイルのみを引用する．そのため，
+1.HW Componentの工程は省略する．図3.2に引用するXSAファイルの概要を示す．
+\begin{figure}[H]
+  \center
+  \includegraphics[scale = 0.8]{pict/pict2.jpg}
+  \caption{HW BlockDesign}
+\end{figure}
+図3.2中の配線によって繋がれているブロックの部分をIP(Intellectual Property)
+と呼び，FPGA業界では，既に設計された設計資産，の意味で使用される．
+回路設計を行うユーザの視点からすると，既に設計された回路ライブラリを表す．
+こうしたIPを利用することにより，容易な回路設計を実現している．
+図3.2に示したBlockDesignの各IPを表3.1に列挙する．
+\begin{table}[H]
+  \caption{BlockDesignにおけるIP}
+  \label{table:SpeedOfLight}
+  \centering
+   \begin{tabular}{clll}
+    \hline
+    番号 & IP種類 & IP名称 & 出力端子 \\
+    \hline \hline
+    1 & Zynq UltraScale++ MPSoC & zynq_ultra_ps_e_0 & \\
+    2 & Processor System Reset & rst_ps8_0_100M & \\
+    3 & Concat & xlconcat_0 & \\
+    4 & Clocking Wizard & clk_wiz_0 &\\
+    5 & Processor System Reset & proc_sys_reset_0 & \\
+     & Processor System Reset & proc_sys_reset_1 & \\
+     & Processor System Reset & proc_sys_reset_2 & \\
+     & Processor System Reset & proc_sys_reset_3 & \\
+     & Processor System Reset & proc_sys_reset_4 & \\
+     & Processor System Reset & proc_sys_reset_5 & \\
+     & Processor System Reset & proc_sys_reset_6 & \\
+    6 & AXI BRAM Controller & axi_bram_ctrl_0 & \\
+    7 & Block Memory Generator & axi_bram_ctrl_0_bram & \\
+    8 & AXI GPIO & axi_gpio_2 & wifi_en_led, bt_en_led\\
+    9 & System Management Wizard & system_management_wiz_0 & \\
+    10 & AXI GPIO & axi_gpio_1 & fan_pwm \\
+    11 & & PWM_w_lnt_0 & ls_mezz_pwm0[0:0] \\
+    12 & AXI GPIO & axi_gpio_0 & ls_mezz_rst[1:0] \\
+    13 & & PWM_w_lnt_1 & ls_mezz_pwm1[0:0] \\
+    14 & AXI UART166550 & axi_uart166550_0 & ls_mezz_uart0_tx \\
+    15 & AXI Interrupt Controller & axi_intc_0 & \\
+    16 & AXI UART166550 & axi_uart166550_1 & ls_mezz_uart0_tx \\
+    17 & Slice & xlslice_0 & hs_mezz_csi0_c[1:0] \\
+    & Slice & xlslice_1 & hs_mezz_csi0_d[7:0] \\
+    & Slice & xlslice_2 & hs_mezz_csi1_c[1:0] \\
+    & Slice & xlslice_3 & hs_mezz_csi1_d[3:0] \\
+    & Slice & xlslice_4 & hs_mezz_csi0_c[1:0] \\
+    & Slice & xlslice_5 & hs_mezz_csi1_d[3:0] \\
+    & Slice & xlslice_6 & hs_mezz_dsi_mclk[0:0] \\
+    & Slice & xlslice_7 & hs_mezz_dsi_clk[1:0] \\
+    & Slice & xlslice_8 & hs_mezz_dsi_d[7:0] \\
+    & Slice & xlslice_9 & hs_mezz_hsic_d[0:0] \\
+  \hline
+  \end{tabular}
+\end{table}
+FPGAではFPGA内部のロジックに供給するクロックを指定する必要がある．
+その機能を有しているIPが図3.2中の4番目のIPであるClocking Wizardであり，
+実際に出力されるクロックの詳細について図3.3に示す．
+\begin{table}[hbtp]
+  \caption{Clocking Wizardによる出力クロック}
+  \label{physics}
+  \centering
+  \begin{tabular}{ccc}
+    \hline
+    ポート名 & \multicolumn{2}{c}{出力周波数 (MHz)} \\
+    \cmidrule(lr){2-3}
+     & 要求 & 実際 \\
+    \hline
+    clock_out1 & 150 & 150 \\
+    clock_out2 & 300 & 300 \\
+    clock_out3 & 75 & 75 \\
+    clock_out4 & 100 & 100 \\
+    clock_out5 & 200 & 200 \\
+    clock_out6 & 400 & 400 \\
+    clock_out7 & 600 & 600 \\
+    \hline
+    \end{tabular}
+\end{table}
 
- 次に，2.SW Componentの工程に映る．ここではPetalinuxを用いてUltra96v2上で
- 起動するカーネルの作成を行う．
+次に，2.SW Componentの工程に移る．ここではPetalinuxを用いてUltra96v2上で
+起動するカーネルの作成を行う．
 
- 最後に，1.HW Componentと2.SW Componentの工程で得られた成果物を用いて
- Vitis Target Platformの作成を行う．
- \subsection{アプリケーション作成(PS)}
+最後に，1.HW Componentと2.SW Componentの工程で得られた成果物を用いて
+Vitis Target Platformの作成を行う．
+\subsection{アプリケーション作成(PS)}
 実行時にPSのみを用いて画像の前処理を行うアプリケーションの作成について述べる．
 このアプリケーションのソースコードはPythonで記述しており，
 ファイル名をprepro_PS.pyとし以下に示す．
@@ -329,7 +410,8 @@ re_hとre_wを引数として渡すことでリサイズ処理を行う．
 以上の工程を経て，26行目で処理時間の出力を行う．
 
  \subsection{アプリケーション作成(PS+PL)}
-
+%
+%========評価実験=======================================================================
 \chapter{評価実験}
 \section{実験方法}
 \section{実験結果}
