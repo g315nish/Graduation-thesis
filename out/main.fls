@@ -395,6 +395,17 @@ INPUT c:/texlive/2022/texmf-dist/tex/latex/booktabs/booktabs.sty
 INPUT c:/texlive/2022/texmf-dist/tex/latex/booktabs/booktabs.sty
 INPUT c:/texlive/2022/texmf-dist/tex/latex/booktabs/booktabs.sty
 INPUT c:/texlive/2022/texmf-dist/tex/latex/booktabs/booktabs.sty
+INPUT c:/texlive/2022/texmf-dist/tex/latex/tools/longtable.sty
+INPUT c:/texlive/2022/texmf-dist/tex/latex/tools/longtable.sty
+INPUT c:/texlive/2022/texmf-dist/tex/latex/tools/longtable.sty
+INPUT c:/texlive/2022/texmf-dist/tex/latex/tools/longtable.sty
+INPUT c:/texlive/2022/texmf-dist/tex/latex/tools/longtable.sty
+INPUT c:/texlive/2022/texmf-dist/tex/latex/tools/longtable.sty
+INPUT c:/texlive/2022/texmf-dist/tex/latex/tools/longtable.sty
+INPUT c:/texlive/2022/texmf-dist/tex/latex/tools/longtable.sty
+INPUT c:/texlive/2022/texmf-dist/tex/latex/tools/longtable.sty
+INPUT c:/texlive/2022/texmf-dist/tex/latex/tools/longtable.sty
+INPUT c:/texlive/2022/texmf-dist/tex/latex/tools/longtable.sty
 INPUT c:/texlive/2022/texmf-dist/tex/platex/pxchfon/pxchfon.sty
 INPUT c:/texlive/2022/texmf-dist/tex/platex/pxchfon/pxchfon.sty
 INPUT c:/texlive/2022/texmf-dist/tex/platex/pxchfon/pxchfon.sty
@@ -551,6 +562,14 @@ INPUT c:/texlive/2022/texmf-dist/fonts/tfm/ptex-fonts/standard/goth10.tfm
 INPUT c:/texlive/2022/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
 INPUT c:/texlive/2022/texmf-dist/fonts/tfm/public/cm/cmr12.tfm
 INPUT c:/texlive/2022/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
+INPUT ./pict/pict4.jpg
+INPUT ./pict/pict4.jpg
+INPUT pict/pict4.jpg
+INPUT extractbb -B cropbox -O pict/pict4.jpg
+INPUT ./pict/pict5.jpg
+INPUT ./pict/pict5.jpg
+INPUT pict/pict5.jpg
+INPUT extractbb -B cropbox -O pict/pict5.jpg
 INPUT c:/texlive/2022/texmf-dist/fonts/tfm/jknappen/ec/tcrm1095.tfm
 INPUT ./pict/pict.jpg
 INPUT ./pict/pict.jpg

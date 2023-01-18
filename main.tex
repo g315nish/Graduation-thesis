@@ -22,6 +22,7 @@
 \usepackage{textcomp}
 \usepackage{xcolor}
 \usepackage{booktabs}
+\usepackage{longtable}
 \usepackage[ipaex]{pxchfon}
 
 \usepackage{listings,jvlisting}
@@ -75,7 +76,7 @@
 
 \vspace{20mm}
 
-{\LARGE 令和 5 年 1 月 4 日提出}\\
+{\LARGE 令和 5 年 1 月 20 日提出}\\
 
 \vspace{20mm}
 
@@ -142,56 +143,53 @@ FPGA（Field Programmable Gate Array）は集積回路の一種であり，様�
 について，画像処理およびFPGAの観点から説明する．第3章では本研究で扱う画像処理アプリケーションの実装について，
 開発環境，開発フロー及び
 %
-%========準備=========================================================================
-\chapter{準備}
-
+%========予備知識=========================================================================
+\chapter{予備知識}
+本章では，この論文を読むにあたって理解しておく必要のある予備知識について記述する．
 \section{画像処理}
 \subsection{物体検出}
 機械学習を活用して画像に映る特定の物体を検出する技術を物体検出と呼ぶ．
+物体検出における大まかな流れを図2.1に示す．
+\begin{figure}[H]
+  \center
+  \includegraphics[scale = 0.8]{pict/pict4.jpg}
+  \caption{物体検出の流れ}
+\end{figure}
+物体検出の流れとして，はじめにカメラから入力画像を取得する．
+この画像に対して画像前処理を行う．この処理は画像データの整形を行い，整形したデータを
+推論モデルに渡す．
+整形された画像データを受け取った推論モデルは推論処理を行い，
+推論結果を出力する．こうした推論処理を行うことで物体検出技術は実現されており，
+製造業や自動車分野，さらには医療分野など幅広い場所で利用されている．
 
+\subsection{物体検出の詳細}
+本研究における物体検出の詳細について示す．
+本研究では推論モデルに，YOLOv3 tinyおよびYOLOv4を想定している．
+そのため，入力画像に対する前処理はリサイズと正規化を用いる．
+\begin{figure}[H]
+  \center
+  \includegraphics[scale = 0.8]{pict/pict5.jpg}
+  \caption{リサイズ}
+\end{figure}
+図2.2にリサイズの工程を示した．
+入力画像のサイズを横:X，縦:Yに対してリサイズ後のサイズは416pxの正方形である．
 
-\subsection{前処理}
-
-% \subsection{前処理の種類}
-% 物体検出における前処理の役割は主に，意味のある特徴量を際立たせること，意味のない特徴量を除去すること，
-% 特徴量を増やすことの3点が挙げられる．この3つの役割を担う具体的な手法を列挙する．
-% \begin{quote}
-%   \begin{itemize}
-%     \item 意味のある特徴量を際立たせる
-%     \begin{quote}
-%       \begin{itemize}
-%         \item グレートスケール変換
-%         \item 2値化
-%         \item 正規化
-%       \end{itemize}
-%     \end{quote}
-%     \item 意味のない特徴量を除去する
-%     \begin{quote}
-%       \begin{itemize}
-%         \item モルフォジー変換
-%         \item ヒストグラム
-%         \item 次元圧縮
-%         \item リサイズ
-%       \end{itemize}
-%     \end{quote}
-%     \item 特徴量を増やす
-%     \begin{quote}
-%       \begin{itemize}
-%         \item 反転
-%         \item 平滑化
-%         \item 明度変更
-%         \item アノテーション
-%       \end{itemize}
-%     \end{quote}
-%   \end{itemize}
-% \end{quote}
+次に正規化について示す．正規化とは特徴量の値の範囲を一定の範囲内に収めるように変換する処理のこと
+である．
+\begin{equation}
+  \begin{split}
+  &x_{norm} = \frac{x-x_{min}}{x_{max}-x_{min}} \\
+  (x_{norm}:xを正規化&した値, x_{min}:xの最小値，x_{max}:xの最大値) \\
+  \end{split}
+\end{equation}
+式2.1ではある特徴量xに対して特徴量の取り得る最小値を引き，その値を
+特徴量の最大値と最小値の差つまり特徴量の取り得る範囲で割ることで
+正規化を行っている．これは特徴量の値を0から1の値に変換する処理であることから
+0,1スケーリングと呼ばれる．
 
 \subsection{OpenCV}
 OpenCVとはOpen Source Computer Vision Libraryの略称で，Intelが開発した画像・動画に関する処理機能をまとめた
 オープンソースのライブラリである．
-
-FPGA用の画像データ前処理アプリケーションはVitisというツールで作成するため，Vitisツール専用のライブラリを用いる必要がある．
-そのライブラリが，Xilinxから提供されているVitis Vision Libraryであり，OpenCVの画像処理関数の多くを含んでいる．
 
 \section{FPGA}
 \subsection{FPGA概要}
@@ -203,13 +201,38 @@ FPGAはField Programmable Gate Arrayの略称であり，日本語に直訳す�
 一方でFPGAは「現場で構成可能」という表現からもわかる通り，ユーザの手元でロジックや配線を変更できるというコンセプトを基に
 開発される．現在開発されているFPGAの規模は様々だが，一昔前の専用LSIを超える規模の回路を簡単に構成できるようになってきている．
 また，FPGAとASICなどの専用LSIとの大きな違いとして「製造のための初期コスト」が不要なことも挙げられる．
+\subsection{Ultra96v2}
+本研究で扱うFPGAボード．Ultra96v2に搭載されているZynq UltraScale+ MPSoCは，プロセッサとFPGAを
+1チップに搭載しており，機能を以下に述べる．
+%引用https://www.avnet.com/wps/portal/japan/products/product-highlights/ultra96/
+\begin{quote}
+  \begin{itemize}
+    \item 高性能かつ大容量プログラムロジックを利用した高帯域な信号・画像処理
+    \item Cortex-A53アプリケーションプロセッサで余裕のあるシステム（OS/GUI）プロセス処理実行
+    \item Cortex-R5でタイミングクリティカルなリアルタイム処理をプログラムロジックと連携処理
+  \end{itemize}
+\end{quote}
+以上の機能を持つことからも，自動車，医療，製造業，放送，通信などの幅広い分野で利用されている．
 
-
-\subsection{比較}
 %
-%========アプリケーションの実装=================================================================
-\chapter{アプリケーションの実装}
-\section{開発環境}
+%========エッジAIプラットフォーム開発=================================================================
+\chapter{エッジAIプラットフォーム開発}
+\section{Vitis プラットフォーム概要}
+Vitis プラットフォームは，外部メモリインターフェイス，カスタム入出力インターフェイス，ソフトウェアランタイムなど，
+AMDザイリンクスプラットフォームのハードウェアやソフトウェアのベースアーキテクチャおよびアプリケーションコンテキストを
+定義する．
+
+Vitis プラットフォームを使用する設計書法は様々なメリットをもたらし，生産性の向上につながる．特徴を以下に列挙する．
+\begin{quote}
+  \begin{itemize}
+    \item プラットフォームの再利用性：同じプラットフォーム上で異なるアクセラレーションアプリケーションを入れ替え可能
+    \item アプリケーションの移植性：最小限の操作で異なるプラットフォーム間でアプリケーションを移植可能
+    \item シミュレーション時間：カーネルを使用する協調シミュレーションの高速化
+    \item ランタイム：オープンソースのランタイムを使用してPCle®インターフェイスまたはエンベデッドインターフェイス経由でホストとデバイス間の通信を制御
+    \item システムデバッグ：システム全体の協調シミュレーションによって，全ハードウェアコンパイル時間を短縮
+  \end{itemize}
+\end{quote}
+\section{Vitis プラットフォーム開発環境とツール}
 \begin{quote}
   \begin{itemize}
     \item Ubuntu18.04.3 LTS・・・
@@ -225,8 +248,6 @@ FPGAはField Programmable Gate Arrayの略称であり，日本語に直訳す�
     の開発を容易にする．
     \item Vitis-v2020.1・・・
     Xilinxが提供するVitis統合ソフトウェアプラットフォーム．ツール内容を以下に述べる．
-    \item OpenCV-v3.4.16・・・
-    本研究で扱うVitis-v2020.1が用いるVitis Vision Libraryに対応しているバージョンのOpenCVを用いる．
     \begin{quote}
       \begin{itemize}
         \item アクセラレーションアプリケーションをシームレスに構築するための包括的なコア開発キット
@@ -237,38 +258,23 @@ FPGAはField Programmable Gate Arrayの略称であり，日本語に直訳す�
         のエコシステム
       \end{itemize}
     \end{quote}
-    \item Ultra96v2・・・
-    本研究で扱うFPGAボード．Ultra96v2に搭載されているZynq UltraScale+ MPSoCは，プロセッサとFPGAを
-    1チップに搭載しており，機能を以下に述べる．
-    %引用https://www.avnet.com/wps/portal/japan/products/product-highlights/ultra96/
-    \begin{quote}
-      \begin{itemize}
-        \item 高性能かつ大容量プログラムロジックを利用した高帯域な信号・画像処理
-        \item Cortex-A53アプリケーションプロセッサで余裕のあるシステム（OS/GUI）プロセス処理実行
-        \item Cortex-R5でタイミングクリティカルなリアルタイム処理をプログラムロジックと連携処理
-      \end{itemize}
-    \end{quote}
-    以上の機能を持つことからも，自動車，医療，製造業，放送，通信などの幅広い分野で利用されている．
-    %Zynq UltraScale+ MPSoPブロックダイアグラムの画像を挿入してみよう
+    %\item OpenCV-v3.4.16・・・
+    %本研究で扱うVitis-v2020.1が用いるVitis Vision Libraryに対応しているバージョンのOpenCVを用いる．
   \end{itemize}
 \end{quote}
-\section{開発フロー}
-本研究では物体検出における画像前処理アプリケーションを作成する．
-アプリケーション作成の流れとしてプラットフォームの作成，PSのみを
-利用して処理を行うアプリケーションの作成，PSとPLを用いて処理を
-行うアプリケーションの作成を行う．
-\subsection{プラットフォーム作成}
+\section{Vitis プラットフォーム作成}
 \begin{figure}[H]
   \center
   \includegraphics[scale = 0.8]{pict/pict.jpg}
   \caption{プラットフォーム作成フロー}
 \end{figure}
-プラットフォームの作成は図3.1プロットフォーム作成フローに従って行う．
+プラットフォームの作成は図3.1プラットフォーム作成フローに従って行い，
+以下に示す工程はXilinx提供のユーザガイド\cite{Xilinx-platform}を参考にして実行する．
 また，Ultra96v2向けプラットフォームがavnet社より提供されているので，
 このプラットフォームを用いても良いのだが，カーネル作成時にライブラリの
 追加などを行う必要があるため，avnet社が提供しているプラットフォームの内，
 ハードウェア構成が構築されているXSAファイルのみを引用する．そのため，
-1.HW Componentの工程は省略する．図3.2に引用するXSAファイルの概要を示す．
+1.HW Componentの工程は省略する．図3.2に引用するXSAファイルのBlockDesignを示す．
 \begin{figure}[H]
   \center
   \includegraphics[scale = 0.8]{pict/pict2.jpg}
@@ -346,12 +352,56 @@ FPGAではFPGA内部のロジックに供給するクロックを指定する必
     \end{tabular}
 \end{table}
 
-次に，2.SW Componentの工程に移る．ここではPetalinuxを用いてUltra96v2上で
-起動するカーネルの作成を行う．
+2.SW Componentの工程に移る．この工程ではPetalinuxツールを用いて作業を行う．
+はじめに，1.HW Componentで示したXSAファイルからハードウェアコンポーネントの情報を取り込む．
+次に，Ultra96v2上で起動するLinuxカーネルの設定として，デバイスドライバとCPUの電力管理について設定を行う．
+最後にrootfsの設定として，利用するuser packageを有効にする．
+以上の設定を経て，PetaLinuxプロジェクトのビルドを行う．ビルドを行うことで，設定したLinuxカーネル並びにsdk.shの生成を行う．
+生成したsdk.shを実行することでsysrootが生成される．
+以下に2.SW Componentにおける成果物のうち，SDカードに書き込むものを列挙する．
+\begin{quote}
+  \begin{itemize}
+    \item bl31.elf
+    \item image.ub
+    \item pmufw.elf
+    \item u-boot.elf
+    \item zynqmp_fsbl.elf
+    \item system.dtb
+    \item linux.bif
+    \item sysroot
+  \end{itemize}
+\end{quote}
+上記の生成物の内，bl31.elf，image.ub，pmufw.elf，u-boot.elf，zynqmp_fsbl.elf，system.dtb，linux.bifを
+起動用ファイルとして用いるためbootディレクトリにまとめて管理する．
 
-最後に，1.HW Componentと2.SW Componentの工程で得られた成果物を用いて
-Vitis Target Platformの作成を行う．
-\subsection{アプリケーション作成(PS)}
+1.HW Componentと2.SW Componentの工程で得られた成果物とVitisツールを用いて
+Vitis Target Platformの作成を行う．Vitisを起動後，1.HW Componentで示したXSAファイルを選択して，
+Platform Projectを作成する．Domein設定を開き，OSをLinux，Processorをpsu_cortex53に指定する．
+加えてBifファイルをlinux.bif，Boot Components DirectoryおよびLinux Image Directoryをbootディレクトリ，
+Sysroot Directoryにsysroots/aarch64-xilinx-linuxディレクトリを指定した．
+最後にBoard Support Packageの設定を行い，プラットフォームをビルドすることでプラットフォーム作成を完了する．
+
+\section{Vitis Vision Library}
+FPGA用の画像データ前処理アプリケーションはVitisというツールで作成するため，Vitisツール専用のライブラリを用いる必要がある．
+そのライブラリが，Xilinxから提供されているVitis Vision Libraryであり，OpenCVの画像処理関数の多くを含んでいる．
+Vitis Vision Libraryの特徴を以下に列挙する．
+\begin{quote}
+  \begin{itemize}
+    \item 色およびビット深度変換，ピクセルごとの算術演算，幾何変換，統計，フィルター，特徴検出，分類，3D再構成など性能に最適化された機能の提供
+    \item カラー画像処理のネイティブサポート，マルチチャネルストリーミングのサポート
+    \item オンチップメモリまたは外部メモリ間のデータ移動を効率的に管理して最大限の性能を達成
+    \item ビジョンパイプラインに求められる演算能力をすばやく評価して最適なデバイスを選択
+    \item ビジョンおよび画像処理アルゴリズムを高速化する方法を示すサンプルデザインを提供
+    \item 関数パラメータを活用し，1クロックサイクルで複数ピクセルを処理してスループット要件を満たす
+  \end{itemize}
+\end{quote}
+%
+%========アプリケーションの実装=================================================================
+\chapter{アプリケーションの実装}
+本研究では物体検出における画像前処理アプリケーションを作成する．
+PSのみを利用して処理を行うアプリケーションと
+PSとPLを用いて処理を行うアプリケーションの作成を行う．
+\section{アプリケーション作成(PS)}
 実行時にPSのみを用いて画像の前処理を行うアプリケーションの作成について述べる．
 このアプリケーションのソースコードはPythonで記述しており，
 ファイル名をprepro_PS.pyとし以下に示す．
@@ -363,12 +413,13 @@ Vitis Target Platformの作成を行う．
   import numpy as np
   
   re_length = 416
-  
-  time_sta = time.time()
+  total = 0
   
   for i in range(600):
   
       img = cv2.imread("./mask_before/Mask_" + str(i+1) + ".jpg")
+  
+      time_sta = time.time()
   
       h, w = img.shape[:2]
   
@@ -378,10 +429,12 @@ Vitis Target Platformの作成を行う．
   
       img_normal = img_resize/255
   
-  time_end = time.time()
-  t = time_end - time_sta
+      time_end = time.time()
+      t = time_end - time_sta
+      total = total + t
+      k = i + 1
   
-  print(str(t))
+  print("time:" + str(total) + "[ms]")
 \end{lstlisting}
 prepro_PS.pyの概要を以下に述べる．
 1行目から5行目までは必要なモジュールを利用するための記述である．
@@ -409,15 +462,51 @@ re_hとre_wを引数として渡すことでリサイズ処理を行う．
 行っている．
 以上の工程を経て，26行目で処理時間の出力を行う．
 
- \subsection{アプリケーション作成(PS+PL)}
+\section{アプリケーション作成(PS+PL)}
+PSとPLを用いるアプリケーションの作成は，3章で作成したプラットフォームを利用して行う．
+Vitisを起動し，プラットフォームの選択を行い，その後サンプルからVitis Vision Libraryの
+resizeを選択する．作成したソースコードを以下に示す．
+%
+%========ここにC++で記述されたリサイズのソースコードを貼る．
+%
+%========ここにソースコードの説明
 %
 %========評価実験=======================================================================
 \chapter{評価実験}
 \section{実験方法}
+4章で作成した
 \section{実験結果}
-\section{考察}
+%
+%========考察========================================================================
+\chapter{考察}
+本章では，ハードウェア実装した前処理の性能に対する考察と，本研究の今後の展望についての考察を
+述べる．
 
-\chapter{まとめ}
+まず，ハードウェア実装した前処理の性能に対する考察を述べる
+
+次に，本研究の今後の展望について考察を述べる．本研究では，物体検出における前処理の部分の中でも，
+特にリサイズの処理に対して焦点を当てた．しかし実際の前処理では，リサイズだけの処理をするわけではなく，
+正規化などの他の処理も行う，この前処理は推論モデルによってまちまちである．そのため，リサイズ以外の前処理についても
+ハードウェア実装をすることで高速化できると考える．
+また，エッジコンピューティングにおける速度以外の課題であるリソースの使用率や消費電力の項目についてもハードウェア化することで
+どのような変化をもたらすか検証する必要がある．
+加えて，ハードウェア実装した前処理を，物体検出に組み込み，前処理から推論処理までの物体検出全体の処理速度にどの程度影響を
+及ぼすのかも検証する必要がある．
+%=======あとがき=====================================================================
+\chapter{あとがき}
+本研究では，物体検出におけるリアルタイム性を課題として取り上げ，前処理を高速化することを目的とした．
+この目的を成し遂げるため，前処理の部分をハードウェア実装することを目標とした．
+本研究を進めるにあたって，はじめに開発ツールであるVivado，Petalinux，Vitisの使用方法について学習を行った．
+その後，プラットフォームの作成，アプリケーションの作成，FPGAボードでの実験，性能評価の順で実行した．
+
+本研究の結果．．．
+
+しかし，ハードウェア実装できた前処理はリサイズ処理のみであり，さらに高速化を図るためには，その他の前処理についても
+ハードウェア実装する必要がある．加えてエッジデバイスにおけるリアルタイム性以外の課題であるリソース使用率や消費電力については
+検証できていないので，これらの項目についても検証する必要がある．
+また，先に述べた開発ツールを利用するにあたって，ハードウェアとソフトウェアの開発に関する知識の両方が必要となるため，
+ツールを扱えるようになるまで多くの時間を必要とする．
+以上の課題を解決することで，物体検出におけるリアルタイム性の向上につながると考える．
 
 %=====================================================================================
 \chapter*{謝辞} %章を付けずにタイトル表示
@@ -429,10 +518,12 @@ re_hとre_wを引数として渡すことでリサイズ処理を行う．
 
 最後に，多大な御協力と貴重な御助言を頂いた計算機/ソフトウェアシステム研究室の諸氏に厚く御礼申し上げます．
 %=====================================================================================
-\chapter*{参考文献}
+%\chapter*{参考文献}
 \addcontentsline{toc}{chapter}{参考文献} %章立てせずに目次に追加するおまじない
 \renewcommand{\bibname}{参考文献} %これがないと，タイトルが「関連図書」になってしまう
 \bibliography{bibtexファイル名} %bibtexファイルの読み込み
 \bibliographystyle{junsrt} %本文に\cite{}を入れることで，参考文献表示
-
+\begin{thebibliography}{99}
+  \bibitem{Xilinx-platform} Xilinx, \\Vitis 統合ソフトウェアプラットフォームの資料：エンベデッドソフトウェア開発, \\2020-06-24, \\\url{https://docs.xilinx.com/r/2020.1-日本語/ug1400-vitis-embedded}, \\参照2023-01-18
+\end{thebibliography}
 \end{document}

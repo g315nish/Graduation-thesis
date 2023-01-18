@@ -1,4 +1,4 @@
-This is e-pTeX, Version 3.141592653-p4.0.0-220214-2.6 (utf8.sjis) (TeX Live 2022) (preloaded format=platex 2022.11.10)  14 JAN 2023 23:04
+This is e-pTeX, Version 3.141592653-p4.0.0-220214-2.6 (utf8.sjis) (TeX Live 2022) (preloaded format=platex 2022.11.10)  19 JAN 2023 07:02
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -326,40 +326,58 @@ Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
 \@thisruleclass=\count294
 \@lastruleclass=\count295
 \@thisrulewidth=\dimen259
+) (c:/texlive/2022/texmf-dist/tex/latex/tools/longtable.sty
+Package: longtable 2021-09-01 v4.17 Multi-page Table package (DPC)
+\LTleft=\skip69
+\LTright=\skip70
+\LTpre=\skip71
+\LTpost=\skip72
+\LTchunksize=\count296
+\LTcapwidth=\dimen260
+\LT@head=\box123
+\LT@firsthead=\box124
+\LT@foot=\box125
+\LT@lastfoot=\box126
+\LT@gbox=\box127
+\LT@cols=\count297
+\LT@rows=\count298
+\c@LT@tables=\count299
+\c@LT@chunks=\count300
+\LT@p@ftn=\toks30
 ) (c:/texlive/2022/texmf-dist/tex/platex/pxchfon/pxchfon.sty
 Package: pxchfon 2021/05/30 v1.9
 ) (c:/texlive/2022/texmf-dist/tex/latex/listings/listings.sty
-\lst@mode=\count296
-\lst@gtempboxa=\box123
-\lst@token=\toks30
-\lst@length=\count297
-\lst@currlwidth=\dimen260
-\lst@column=\count298
-\lst@pos=\count299
-\lst@lostspace=\dimen261
-\lst@width=\dimen262
-\lst@newlines=\count300
-\lst@lineno=\count301
-\lst@maxwidth=\dimen263
+\lst@mode=\count301
+\lst@gtempboxa=\box128
+\lst@token=\toks31
+\lst@length=\count302
+\lst@currlwidth=\dimen261
+\lst@column=\count303
+\lst@pos=\count304
+\lst@lostspace=\dimen262
+\lst@width=\dimen263
+\lst@newlines=\count305
+\lst@lineno=\count306
+\lst@maxwidth=\dimen264
 (c:/texlive/2022/texmf-dist/tex/latex/listings/lstmisc.sty
 File: lstmisc.sty 2020/03/24 1.8d (Carsten Heinz)
-\c@lstnumber=\count302
-\lst@skipnumbers=\count303
-\lst@framebox=\box124
+\c@lstnumber=\count307
+\lst@skipnumbers=\count308
+\lst@framebox=\box129
 ) (c:/texlive/2022/texmf-dist/tex/latex/listings/listings.cfg
 File: listings.cfg 2020/03/24 1.8d listings configuration
 ))
 Package: listings 2020/03/24 1.8d (Carsten Heinz)
 (c:/texlive/2022/texmf-dist/tex/latex/jvlisting/jvlisting.sty
 Package: jvlisting 2011/11/17 v0.7 Formatted Program Listings
-\jvl@idt=\count304
-\jvl@tmphyphenchar=\count305
+\jvl@idt=\count309
+\jvl@tmphyphenchar=\count310
 \jvl@fileinput=\read2
-\listingskipamount=\skip69
-\listingindent=\dimen264
-\prelistingpenalty=\count306
-\listingpenalty=\count307
-\postlistingpenalty=\count308
+\listingskipamount=\skip73
+\listingindent=\dimen265
+\prelistingpenalty=\count311
+\listingpenalty=\count312
+\postlistingpenalty=\count313
 ) (c:/texlive/2022/texmf-dist/tex/latex/geometry/geometry.sty
 Package: geometry 2020/01/02 v5.9 Page Geometry
 (c:/texlive/2022/texmf-dist/tex/generic/iftex/ifvtex.sty
@@ -367,49 +385,49 @@ Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
 (c:/texlive/2022/texmf-dist/tex/generic/iftex/iftex.sty
 Package: iftex 2022/02/03 v1.0f TeX engine tests
 ))
-\Gm@cnth=\count309
-\Gm@cntv=\count310
-\c@Gm@tempcnt=\count311
-\Gm@bindingoffset=\dimen265
-\Gm@wd@mp=\dimen266
-\Gm@odd@mp=\dimen267
-\Gm@even@mp=\dimen268
-\Gm@layoutwidth=\dimen269
-\Gm@layoutheight=\dimen270
-\Gm@layouthoffset=\dimen271
-\Gm@layoutvoffset=\dimen272
-\Gm@dimlist=\toks31
+\Gm@cnth=\count314
+\Gm@cntv=\count315
+\c@Gm@tempcnt=\count316
+\Gm@bindingoffset=\dimen266
+\Gm@wd@mp=\dimen267
+\Gm@odd@mp=\dimen268
+\Gm@even@mp=\dimen269
+\Gm@layoutwidth=\dimen270
+\Gm@layoutheight=\dimen271
+\Gm@layouthoffset=\dimen272
+\Gm@layoutvoffset=\dimen273
+\Gm@dimlist=\toks32
 ) (c:/texlive/2022/texmf-dist/tex/latex/l3backend/l3backend-dvips.def
 File: l3backend-dvips.def 2022-10-26 L3 backend support: dvips
-\l__pdf_internal_box=\box125
-\g__pdf_backend_object_int=\count312
-\l__pdf_backend_content_box=\box126
-\l__pdf_backend_model_box=\box127
-\g__pdf_backend_annotation_int=\count313
-\g__pdf_backend_link_int=\count314
-\g__pdf_backend_link_sf_int=\count315
+\l__pdf_internal_box=\box130
+\g__pdf_backend_object_int=\count317
+\l__pdf_backend_content_box=\box131
+\l__pdf_backend_model_box=\box132
+\g__pdf_backend_annotation_int=\count318
+\g__pdf_backend_link_int=\count319
+\g__pdf_backend_link_sf_int=\count320
 ) (out/main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 50.
-LaTeX Font Info:    ... okay on input line 50.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 50.
-LaTeX Font Info:    ... okay on input line 50.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 50.
-LaTeX Font Info:    ... okay on input line 50.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 50.
-LaTeX Font Info:    ... okay on input line 50.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 50.
-LaTeX Font Info:    ... okay on input line 50.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 50.
-LaTeX Font Info:    ... okay on input line 50.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 50.
-LaTeX Font Info:    ... okay on input line 50.
-LaTeX Font Info:    Checking defaults for JY1/mc/m/n on input line 50.
-LaTeX Font Info:    ... okay on input line 50.
-LaTeX Font Info:    Checking defaults for JT1/mc/m/n on input line 50.
-LaTeX Font Info:    ... okay on input line 50.
-\c@lstlisting=\count316
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for JY1/mc/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for JT1/mc/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+\c@lstlisting=\count321
 *geometry* driver: auto-detecting
 *geometry* detected driver: dvips
 *geometry* verbose mode - [ preamble ] result:
@@ -448,9 +466,9 @@ LaTeX Font Info:    ... okay on input line 50.
 
 ]
 LaTeX Font Info:    Font shape `JT1/mc/bx/n' in size <20.74> not available
-(Font)              Font shape `JT1/gt/m/n' tried instead on input line 102.
+(Font)              Font shape `JT1/gt/m/n' tried instead on input line 103.
 LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <20.74> not available
-(Font)              Font shape `JY1/gt/m/n' tried instead on input line 102.
+(Font)              Font shape `JY1/gt/m/n' tried instead on input line 103.
 (out/main.toc
 LaTeX Font Info:    Font shape `JT1/mc/bx/n' in size <10.95> not available
 (Font)              Font shape `JT1/gt/m/n' tried instead on input line 1.
@@ -471,7 +489,7 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 \openout4 = `main.toc'.
 
 LaTeX Font Info:    Kanji font shape `JY1/mc/m/sl' undefined
-(Font)              No change on input line 111.
+(Font)              No change on input line 112.
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 15.49998pt, for example:
@@ -482,14 +500,14 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 [3]
 第 1 章
 LaTeX Font Info:    Font shape `JT1/mc/bx/n' in size <14.4> not available
-(Font)              Font shape `JT1/gt/m/n' tried instead on input line 113.
+(Font)              Font shape `JT1/gt/m/n' tried instead on input line 114.
 LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <14.4> not available
-(Font)              Font shape `JY1/gt/m/n' tried instead on input line 113.
+(Font)              Font shape `JY1/gt/m/n' tried instead on input line 114.
 [4
 
 ]
 LaTeX Font Info:    Kanji font shape `JY1/mc/m/sl' undefined
-(Font)              No change on input line 146.
+(Font)              No change on input line 147.
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 15.49998pt, for example:
@@ -500,14 +518,18 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 [5]
 第 2 章
 LaTeX Font Info:    Font shape `JT1/mc/bx/n' in size <12> not available
-(Font)              Font shape `JT1/gt/m/n' tried instead on input line 149.
+(Font)              Font shape `JT1/gt/m/n' tried instead on input line 150.
 LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <12> not available
-(Font)              Font shape `JY1/gt/m/n' tried instead on input line 149.
+(Font)              Font shape `JY1/gt/m/n' tried instead on input line 150.
+File: pict/pict4.jpg Graphic file (type bmp)
+<pict/pict4.jpg>
+File: pict/pict5.jpg Graphic file (type bmp)
+<pict/pict5.jpg>
 [6
 
 ]
 LaTeX Font Info:    Kanji font shape `JY1/mc/m/sl' undefined
-(Font)              No change on input line 211.
+(Font)              No change on input line 204.
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 15.49998pt, for example:
@@ -516,16 +538,8 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-3.49998pt}.
 
 [7]
-第 3 章
-[8
-
-]
-File: pict/pict.jpg Graphic file (type bmp)
-<pict/pict.jpg>
-File: pict/pict2.jpg Graphic file (type bmp)
-<pict/pict2.jpg>
 LaTeX Font Info:    Kanji font shape `JY1/mc/m/sl' undefined
-(Font)              No change on input line 276.
+(Font)              No change on input line 219.
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 15.49998pt, for example:
@@ -533,13 +547,17 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller to compensate:
 (fancyhdr)                \addtolength{\topmargin}{-3.49998pt}.
 
-[9]
-Overfull \hbox (9.06403pt too wide) in paragraph at lines 286--324
- [][] 
- []
+[8]
+第 3 章
+[9
 
+]
+File: pict/pict.jpg Graphic file (type bmp)
+<pict/pict.jpg>
+File: pict/pict2.jpg Graphic file (type bmp)
+<pict/pict2.jpg>
 LaTeX Font Info:    Kanji font shape `JY1/mc/m/sl' undefined
-(Font)              No change on input line 324.
+(Font)              No change on input line 282.
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 15.49998pt, for example:
@@ -548,8 +566,12 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-3.49998pt}.
 
 [10]
+Overfull \hbox (9.06403pt too wide) in paragraph at lines 292--330
+ [][] 
+ []
+
 LaTeX Font Info:    Kanji font shape `JY1/mc/m/sl' undefined
-(Font)              No change on input line 325.
+(Font)              No change on input line 330.
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 15.49998pt, for example:
@@ -558,10 +580,8 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-3.49998pt}.
 
 [11]
-Overfull \vbox (67.00977pt too high) has occurred while \output is active []
-
 LaTeX Font Info:    Kanji font shape `JY1/mc/m/sl' undefined
-(Font)              No change on input line 325.
+(Font)              No change on input line 331.
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 15.49998pt, for example:
@@ -570,8 +590,10 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-3.49998pt}.
 
 [12]
+Overfull \vbox (67.00977pt too high) has occurred while \output is active []
+
 LaTeX Font Info:    Kanji font shape `JY1/mc/m/sl' undefined
-(Font)              No change on input line 371.
+(Font)              No change on input line 331.
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 15.49998pt, for example:
@@ -580,8 +602,12 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-3.49998pt}.
 
 [13]
+Overfull \hbox (0.44508pt too wide) in paragraph at lines 374--376
+\JY1/mc/m/n/10.95 上記の生成物の内 ， \OT1/cmr/m/n/10.95 bl31.elf\JY1/mc/m/n/10.95 ， \OT1/cmr/m/n/10.95 im-age.ub\JY1/mc/m/n/10.95 ， \OT1/cmr/m/n/10.95 pmufw.elf\JY1/mc/m/n/10.95 ， \OT1/cmr/m/n/10.95 u-boot.elf\JY1/mc/m/n/10.95 ， \OT1/cmr/m/n/10.95 zyn-qmp[]-fsbl.elf\JY1/mc/m/n/10.95 ， \OT1/cmr/m/n/10.95 sys-tem.dtb\JY1/mc/m/n/10.95 ，
+ []
+
 LaTeX Font Info:    Kanji font shape `JY1/mc/m/sl' undefined
-(Font)              No change on input line 415.
+(Font)              No change on input line 376.
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 15.49998pt, for example:
@@ -591,7 +617,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 [14]
 LaTeX Font Info:    Kanji font shape `JY1/mc/m/sl' undefined
-(Font)              No change on input line 415.
+(Font)              No change on input line 400.
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 15.49998pt, for example:
@@ -604,23 +630,41 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 [16
 
 ]
-第 5 章
-[17
+LaTeX Font Info:    Kanji font shape `JY1/mc/m/sl' undefined
+(Font)              No change on input line 475.
 
-] [18
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 15.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+(fancyhdr)                \addtolength{\topmargin}{-3.49998pt}.
+
+[17]
+第 5 章
+[18
+
+]
+第 6 章
+[19
+
+]
+第 7 章
+[20
 
 ]
 No file main.bbl.
-[19
+[21
+
+] [22
 
 ] (out/main.aux) ) 
 Here is how much of TeX's memory you used:
- 7189 strings out of 476878
- 106393 string characters out of 5824610
- 535709 words of memory out of 5000000
- 28668 multiletter control sequences out of 15000+600000
+ 7298 strings out of 476878
+ 108043 string characters out of 5824610
+ 556505 words of memory out of 5000000
+ 28773 multiletter control sequences out of 15000+600000
  488325 words of font info for 103 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 55i,12n,62p,262b,1873s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 55i,16n,62p,292b,1732s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on out/main.dvi (19 pages, 40748 bytes).
+Output written on out/main.dvi (22 pages, 56800 bytes).

@@ -1,24 +1,26 @@
 \contentsline {chapter}{\numberline {第1章}序論}{4}{}%
 \contentsline {section}{\numberline {1.1}研究背景}{4}{}%
 \contentsline {section}{\numberline {1.2}論文の構成}{5}{}%
-\contentsline {chapter}{\numberline {第2章}準備}{6}{}%
+\contentsline {chapter}{\numberline {第2章}予備知識}{6}{}%
 \contentsline {section}{\numberline {2.1}画像処理}{6}{}%
 \contentsline {subsection}{\numberline {2.1.1}物体検出}{6}{}%
-\contentsline {subsection}{\numberline {2.1.2}前処理}{6}{}%
-\contentsline {subsection}{\numberline {2.1.3}OpenCV}{6}{}%
-\contentsline {section}{\numberline {2.2}FPGA}{6}{}%
-\contentsline {subsection}{\numberline {2.2.1}FPGA概要}{6}{}%
-\contentsline {subsection}{\numberline {2.2.2}比較}{7}{}%
-\contentsline {chapter}{\numberline {第3章}アプリケーションの実装}{8}{}%
-\contentsline {section}{\numberline {3.1}開発環境}{8}{}%
-\contentsline {section}{\numberline {3.2}開発フロー}{9}{}%
-\contentsline {subsection}{\numberline {3.2.1}プラットフォーム作成}{9}{}%
-\contentsline {subsection}{\numberline {3.2.2}アプリケーション作成(PS)}{13}{}%
-\contentsline {subsection}{\numberline {3.2.3}アプリケーション作成(PS+PL)}{15}{}%
-\contentsline {chapter}{\numberline {第4章}評価実験}{16}{}%
-\contentsline {section}{\numberline {4.1}実験方法}{16}{}%
-\contentsline {section}{\numberline {4.2}実験結果}{16}{}%
-\contentsline {section}{\numberline {4.3}考察}{16}{}%
-\contentsline {chapter}{\numberline {第5章}まとめ}{17}{}%
-\contentsline {chapter}{謝辞}{18}{}%
-\contentsline {chapter}{参考文献}{19}{}%
+\contentsline {subsection}{\numberline {2.1.2}物体検出の詳細}{6}{}%
+\contentsline {subsection}{\numberline {2.1.3}OpenCV}{7}{}%
+\contentsline {section}{\numberline {2.2}FPGA}{7}{}%
+\contentsline {subsection}{\numberline {2.2.1}FPGA概要}{7}{}%
+\contentsline {subsection}{\numberline {2.2.2}Ultra96v2}{8}{}%
+\contentsline {chapter}{\numberline {第3章}エッジAIプラットフォーム開発}{9}{}%
+\contentsline {section}{\numberline {3.1}Vitis プラットフォーム概要}{9}{}%
+\contentsline {section}{\numberline {3.2}Vitis プラットフォーム開発環境とツール}{9}{}%
+\contentsline {section}{\numberline {3.3}Vitis プラットフォーム作成}{10}{}%
+\contentsline {section}{\numberline {3.4}Vitis Vision Library}{15}{}%
+\contentsline {chapter}{\numberline {第4章}アプリケーションの実装}{16}{}%
+\contentsline {section}{\numberline {4.1}アプリケーション作成(PS)}{16}{}%
+\contentsline {section}{\numberline {4.2}アプリケーション作成(PS+PL)}{17}{}%
+\contentsline {chapter}{\numberline {第5章}評価実験}{18}{}%
+\contentsline {section}{\numberline {5.1}実験方法}{18}{}%
+\contentsline {section}{\numberline {5.2}実験結果}{18}{}%
+\contentsline {chapter}{\numberline {第6章}考察}{19}{}%
+\contentsline {chapter}{\numberline {第7章}あとがき}{20}{}%
+\contentsline {chapter}{謝辞}{21}{}%
+\contentsline {chapter}{参考文献}{21}{}%
