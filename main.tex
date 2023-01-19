@@ -120,7 +120,7 @@ IoT機器における処理全体に要する時間の短縮に成功してい�
 CPU性能やメモリ容量といったリソースが劣る．こうした現状から，限られたリソースの中で，
 処理速度やリソース使用量などのパフォーマンスをどれだけ向上させられるかが課題となっている．
 
-また，物体検出に関する研究では，推論処理における高速化が盛んである．その高速化手法は，
+また，物体検出に関する研究では，推論処理における高速化が盛んである．その高速化手法\cite{AccelTemp}は，
 主流な方法である量子化をはじめ，レイヤフュージョン，デバイス最適化，マルチスレッド化など
 さまざまである．しかし，物体検出の流れとしてはじめに入力画像に対する前処理の工程があり，
 この工程における高速化の研究は少ない．実際に物体検出の前処理と推論処理では，推論処理に要する
@@ -137,11 +137,11 @@ FPGA（Field Programmable Gate Array）は集積回路の一種であり，様�
 
 
 \section{論文の構成}
-
+※全体が完成したら書きます．
 %本論文ではエッジコンピューティングにおける物体検出の入力画像に対する前処理の高速化について
-本論文の構成について述べる．第1章では研究背景について述べる．第2章では本論文を読むにあたって必要となる予備知識
-について，画像処理およびFPGAの観点から説明する．第3章では本研究で扱う画像処理アプリケーションの実装について，
-開発環境，開発フロー及び
+%本論文の構成について述べる．第1章では研究背景について述べる．第2章では本論文を読むにあたって必要となる予備知識
+%について，画像処理およびFPGAの観点から説明する．第3章では本研究で扱う画像処理アプリケーションの実装について，
+%開発環境，開発フロー及び
 %
 %========予備知識=========================================================================
 \chapter{予備知識}
@@ -159,13 +159,13 @@ FPGA（Field Programmable Gate Array）は集積回路の一種であり，様�
 この画像に対して画像前処理を行う．この処理は画像データの整形を行い，整形したデータを
 推論モデルに渡す．
 整形された画像データを受け取った推論モデルは推論処理を行い，
-推論結果を出力する．こうした推論処理を行うことで物体検出技術は実現されており，
-製造業や自動車分野，さらには医療分野など幅広い場所で利用されている．
+推論結果を出力する．こうした流れで物体検出技術は実現されており，
+製造業や自動車分野，さらには医療分野など幅広い分野で利用されている．
 
 \subsection{物体検出の詳細}
 本研究における物体検出の詳細について示す．
-本研究では推論モデルに，YOLOv3 tinyおよびYOLOv4を想定している．
-そのため，入力画像に対する前処理はリサイズと正規化を用いる．
+本研究では推論モデルに，YOLOv3 tinyおよびYOLOv4を想定しており，
+入力画像に対する前処理はリサイズを行う．
 \begin{figure}[H]
   \center
   \includegraphics[scale = 0.8]{pict/pict5.jpg}
@@ -174,22 +174,30 @@ FPGA（Field Programmable Gate Array）は集積回路の一種であり，様�
 図2.2にリサイズの工程を示した．
 入力画像のサイズを横:X，縦:Yに対してリサイズ後のサイズは416pxの正方形である．
 
-次に正規化について示す．正規化とは特徴量の値の範囲を一定の範囲内に収めるように変換する処理のこと
-である．
-\begin{equation}
-  \begin{split}
-  &x_{norm} = \frac{x-x_{min}}{x_{max}-x_{min}} \\
-  (x_{norm}:xを正規化&した値, x_{min}:xの最小値，x_{max}:xの最大値) \\
-  \end{split}
-\end{equation}
-式2.1ではある特徴量xに対して特徴量の取り得る最小値を引き，その値を
-特徴量の最大値と最小値の差つまり特徴量の取り得る範囲で割ることで
-正規化を行っている．これは特徴量の値を0から1の値に変換する処理であることから
-0,1スケーリングと呼ばれる．
+%次に正規化について示す．正規化とは特徴量の値の範囲を一定の範囲内に収めるように変換する処理のことである．
+%\begin{equation}
+%  \begin{split}
+%  &x_{norm} = \frac{x-x_{min}}{x_{max}-x_{min}} \\
+%  (x_{norm}:xを正規化&した値, x_{min}:xの最小値，x_{max}:xの最大値) \\
+%  \end{split}
+%\end{equation}
+%式2.1ではある特徴量xに対して特徴量の取り得る最小値を引き，その値を
+%特徴量の最大値と最小値の差つまり特徴量の取り得る範囲で割ることで
+%正規化を行っている．これは特徴量の値を0から1の値に変換する処理であることから
+%0,1スケーリングと呼ばれる．
 
 \subsection{OpenCV}
 OpenCVとはOpen Source Computer Vision Libraryの略称で，Intelが開発した画像・動画に関する処理機能をまとめた
-オープンソースのライブラリである．
+オープンソースのライブラリである．OpenCVの持つ機能\cite{OpenCV}を以下に列挙する．
+\begin{quote}
+  \begin{itemize}
+    \item 画像の入出力
+    \item 画像の前処理
+    \item 画像内のオブジェクト検出
+    \item 画像への描写処理
+    \item Deep Learning
+  \end{itemize}
+\end{quote}
 
 \section{FPGA}
 \subsection{FPGA概要}
@@ -202,7 +210,7 @@ FPGAはField Programmable Gate Arrayの略称であり，日本語に直訳す�
 開発される．現在開発されているFPGAの規模は様々だが，一昔前の専用LSIを超える規模の回路を簡単に構成できるようになってきている．
 また，FPGAとASICなどの専用LSIとの大きな違いとして「製造のための初期コスト」が不要なことも挙げられる．
 \subsection{Ultra96v2}
-本研究で扱うFPGAボード．Ultra96v2に搭載されているZynq UltraScale+ MPSoCは，プロセッサとFPGAを
+本研究で扱うFPGAボード．Ultra96v2に搭載されているZynq UltraScale+ MPSoC\cite{boardinfo}は，プロセッサとFPGAを
 1チップに搭載しており，機能を以下に述べる．
 %引用https://www.avnet.com/wps/portal/japan/products/product-highlights/ultra96/
 \begin{quote}
@@ -214,6 +222,11 @@ FPGAはField Programmable Gate Arrayの略称であり，日本語に直訳す�
 \end{quote}
 以上の機能を持つことからも，自動車，医療，製造業，放送，通信などの幅広い分野で利用されている．
 
+\section{ハードウェアアクセラレーション}
+通常，CPU(PS:Processing System)によって処理されるプログラムが，処理速度や消費電力など課題を抱えている場合に，
+こうした処理のための専用ハードウェア(PL:Programmable Logic)を構成することで処理を援助し，高速化を図る手法のこと．
+
+本研究では，物体検出における前処理に対してハードウェアアクセラレーションをすることで，処理の高速化を図る．
 %
 %========エッジAIプラットフォーム開発=================================================================
 \chapter{エッジAIプラットフォーム開発}
@@ -222,7 +235,7 @@ Vitis プラットフォームは，外部メモリインターフェイス，�
 AMDザイリンクスプラットフォームのハードウェアやソフトウェアのベースアーキテクチャおよびアプリケーションコンテキストを
 定義する．
 
-Vitis プラットフォームを使用する設計書法は様々なメリットをもたらし，生産性の向上につながる．特徴を以下に列挙する．
+Vitis プラットフォーム\cite{VitisPlatform}を使用する設計書法は様々なメリットをもたらし，生産性の向上につながる．特徴を以下に列挙する．
 \begin{quote}
   \begin{itemize}
     \item プラットフォームの再利用性：同じプラットフォーム上で異なるアクセラレーションアプリケーションを入れ替え可能
@@ -286,6 +299,7 @@ Vitis プラットフォームを使用する設計書法は様々なメリッ�
 こうしたIPを利用することにより，容易な回路設計を実現している．
 図3.2に示したBlockDesignの各IPを表3.1に列挙する．
 \begin{table}[H]
+  {\scriptsize
   \caption{BlockDesignにおけるIP}
   \label{table:SpeedOfLight}
   \centering
@@ -327,11 +341,12 @@ Vitis プラットフォームを使用する設計書法は様々なメリッ�
     & Slice & xlslice_9 & hs_mezz_hsic_d[0:0] \\
   \hline
   \end{tabular}
+  }
 \end{table}
 FPGAではFPGA内部のロジックに供給するクロックを指定する必要がある．
 その機能を有しているIPが図3.2中の4番目のIPであるClocking Wizardであり，
-実際に出力されるクロックの詳細について図3.3に示す．
-\begin{table}[hbtp]
+実際に出力されるクロックの詳細について表3.2に示す．
+\begin{table}[H]
   \caption{Clocking Wizardによる出力クロック}
   \label{physics}
   \centering
@@ -353,32 +368,35 @@ FPGAではFPGA内部のロジックに供給するクロックを指定する必
 \end{table}
 
 2.SW Componentの工程に移る．この工程ではPetalinuxツールを用いて作業を行う．
-はじめに，1.HW Componentで示したXSAファイルからハードウェアコンポーネントの情報を取り込む．
-次に，Ultra96v2上で起動するLinuxカーネルの設定として，デバイスドライバとCPUの電力管理について設定を行う．
-最後にrootfsの設定として，利用するuser packageを有効にする．
+はじめに，petalinux projectを作成する．ここでは，後のカーネルおよびrootfsの設定を省略するため
+avnet社の提供しているUltra96v2専用のBoard Support Packageファイルを用いてプロジェクトを立ち上げる．
+次に1.HW Componentで示したXSAファイルからハードウェアコンポーネントの情報を取り込む．
+最後にrootfsの設定として，利用するuser package，opencv，pythonのライブラリを有効にする．
 以上の設定を経て，PetaLinuxプロジェクトのビルドを行う．ビルドを行うことで，設定したLinuxカーネル並びにsdk.shの生成を行う．
-生成したsdk.shを実行することでsysrootが生成される．
-以下に2.SW Componentにおける成果物のうち，SDカードに書き込むものを列挙する．
+生成したsdk.shを自己解凍することでsysrootが生成される．
+以下に2.SW Componentにおける成果物のうち，後のVitis Target Platformの作成とVitis applicationの作成で
+用いるファイルおよびディレクトリを列挙する．
 \begin{quote}
   \begin{itemize}
     \item bl31.elf
     \item image.ub
     \item pmufw.elf
     \item u-boot.elf
-    \item zynqmp_fsbl.elf
+    \item fsbl.elf
     \item system.dtb
     \item linux.bif
+    \item rootfs.ex4
     \item sysroot
   \end{itemize}
 \end{quote}
-上記の生成物の内，bl31.elf，image.ub，pmufw.elf，u-boot.elf，zynqmp_fsbl.elf，system.dtb，linux.bifを
-起動用ファイルとして用いるためbootディレクトリにまとめて管理する．
+上記の生成物の内，bl31.elf，image.ub，pmufw.elf，u-boot.elf，fsbl.elf，system.dtb，linux.bifを
+bootディレクトリにまとめて管理する．
 
 1.HW Componentと2.SW Componentの工程で得られた成果物とVitisツールを用いて
 Vitis Target Platformの作成を行う．Vitisを起動後，1.HW Componentで示したXSAファイルを選択して，
 Platform Projectを作成する．Domein設定を開き，OSをLinux，Processorをpsu_cortex53に指定する．
 加えてBifファイルをlinux.bif，Boot Components DirectoryおよびLinux Image Directoryをbootディレクトリ，
-Sysroot Directoryにsysroots/aarch64-xilinx-linuxディレクトリを指定した．
+rootfs fileをrootfs.ex4，Sysroot Directoryにsysroots/aarch64-xilinx-linuxディレクトリを指定した．
 最後にBoard Support Packageの設定を行い，プラットフォームをビルドすることでプラットフォーム作成を完了する．
 
 \section{Vitis Vision Library}
@@ -427,12 +445,9 @@ PSとPLを用いて処理を行うアプリケーションの作成を行う．
   
       img_resize = cv2.resize(img, dsize=None, fx=re_h, fy=re_w)
   
-      img_normal = img_resize/255
-  
       time_end = time.time()
       t = time_end - time_sta
       total = total + t
-      k = i + 1
   
   print("time:" + str(total) + "[ms]")
 \end{lstlisting}
@@ -441,48 +456,86 @@ prepro_PS.pyの概要を以下に述べる．
 7行目の変数re_lengthは入力画像に対してリサイズした後の画像サイズ
 である416pxを定義している．ここでは入力画像の長辺を416pxにリサイズ
 することを想定しており，リサイズ後も長辺と短辺の大きさの比率は変わらない．
-9行目の変数time_staはプログラムの実行開始時刻を取得しており，
-サンプル画像全てに対する処理が終了した時刻を23行目の変数time_end
-で取得している．24行目ではプログラムの終了時刻から開始時刻の値を
-減算することにより，処理時間の計測を行っている．
-最後に11行目から21行目までの画像処理の部分の説明をする．
-前処理を行うサンプル画像の枚数は600枚で行ったので11行目のrangeの中は
-600に指定している．13行目ではopencvを利用した入力画像の取得を行っており，
-続けて15行目で入力画像の縦のサイズ:h，横のサイズ:wを取得している．
-17行目では入力画像を変換する倍率の計算を行っており，リサイズ後の長辺サイズである
+10行目から20行目までの画像処理の部分の説明をする．
+前処理を行うサンプル画像の枚数は600枚で行ったので10行目のrangeの中は
+600に指定している．12行目ではopencvを利用した入力画像の取得を行っており，
+続けて16行目で入力画像の縦のサイズ:h，横のサイズ:wを取得している．
+18行目では入力画像を変換する倍率の計算を行っており，リサイズ後の長辺サイズである
 416pxを入力画像の縦，横のピクセルサイズのうち大きい方で除算することにより倍率を計算している．
-19行目のimg_resizeには入力画像をリサイズした後の配列を格納する．
-opencvの関数であるcv2.resizeに対して入力画像imgと17行目で計算した倍率である
+20行目のimg_resizeには入力画像をリサイズした後の配列を格納する．
+opencvの関数であるcv2.resizeに対して入力画像imgと18行目で計算した倍率である
 re_hとre_wを引数として渡すことでリサイズ処理を行う．
-21行目のimg_normalは正規化後の画像配列を格納する．正規化とは，
-複数あるデータのうち，そのデータの取り得る最大値と最小値の差で
-各データを除算する．今回は，画像配列に対して正規化を行うため，
-その配列の要素の取り得る範囲は0から255である．そのため，21行目では
-リサイズ後の画像配列であるimg_resizeを255で除算することにより正規化を
-行っている．
-以上の工程を経て，26行目で処理時間の出力を行う．
+
+リサイズにかかる処理時間は，変数totalに格納する．リサイズの処理を行う前後で
+時刻を取得し，その処理時間の計算を行う．1枚当たりにかかった処理時間を変数totalに
+加算していくことで，最終的に600枚当たりの処理時間の計測を行っている．
+%21行目のimg_normalは正規化後の画像配列を格納する．正規化とは，
+%複数あるデータのうち，そのデータの取り得る最大値と最小値の差で
+%各データを除算する．今回は，画像配列に対して正規化を行うため，
+%その配列の要素の取り得る範囲は0から255である．そのため，21行目では
+%リサイズ後の画像配列であるimg_resizeを255で除算することにより正規化を
+%行っている．
 
 \section{アプリケーション作成(PS+PL)}
 PSとPLを用いるアプリケーションの作成は，3章で作成したプラットフォームを利用して行う．
 Vitisを起動し，プラットフォームの選択を行い，その後サンプルからVitis Vision Libraryの
 resizeを選択する．作成したソースコードを以下に示す．
+
+※完成したら書きます
+
 %
 %========ここにC++で記述されたリサイズのソースコードを貼る．
 %
 %========ここにソースコードの説明
 %
+アプリケーションの作成が完了すると新たにSD_Card.imgが生成される．
 %========評価実験=======================================================================
 \chapter{評価実験}
-\section{実験方法}
-4章で作成した
+\section{実験準備}
+\subsection{データセット}
+実験に用いるサンプル画像は，Vitis-AIのUltra96v2上動作に関する記事\cite{SamplePictWeb}に記載されている
+マスクを着用している人々の画像データセットであるMask Dataset\cite{SamplePictDrive}を利用した．
+このデータセットの内，600枚の画像に対して前処理プログラムを実行する．サンプル画像の例を図5.1に示す．
+\begin{figure}[H]
+  \center
+  \includegraphics[scale = 0.17]{pict/Mask_1.jpg}
+  \caption{Mask Dataset Sample Picture}
+\end{figure}
+
+\subsection{SD_Cardの作成}
+Ultra96v2で扱うMicroSDカードに，作成したデータを書き込む方法について図5.2に示す．
+\begin{figure}[H]
+  \center
+  \includegraphics[scale = 0.7]{pict/pict6.jpg}
+  \caption{Mask Dataset Sample Picture}
+\end{figure}
+作成したデータの書き込みにはbalenaEtcherというツールを用いる．このツールを用いてSD＿Card.imgをMicroSDカードに書き込むことで
+自動的にMicroSDカードのパーミッションが割り当てられる．
+MicroSDカードに書き込まれたデータを以下に列挙する．
+※実際に書き込んだら記述します．
+%ディレクトリパスを記述します
+%4章で作成したSD_Cardディレクトリの中身をMicroSDカードの第1パーティション（ディレクトリ名:boot）に，
+%3章のSW Componentで作成したsysrootディレクトリの中のaarch64-xilinx-linuxディレクトリの中身をMicroSDカードの
+%第2パーティション（ディレクトリ名:rootfs）に書き込む．ここで，PSとPLを用いて処理を行うアプリケーションは，
+%/ディレクトリパス/の中に，PSのみを用いて処理を行うアプリケーションはhomeディレクトリの中に書き込む．
+%加えて前処理を行うサンプル画像について記述する．
+
+\subsection{実験環境の構築}
+必要なファイルの書き込みが完了したので，MicroSDカードをUltra96v2に挿入し，PCとシリアル通信を行う．
+シリアル通信用ツールであるGTKtermを起動し，設定画面を開き，ポートを/dev/ttyUSB1に，ボーレートを115200に指定した．
+Ultra96v2の起動ボタンを押すと，Linuxカーネルが起動する．
+加えて，はじめにPSのみを用いて処理を行うアプリケーションのために，pythonで用のOpenCVをダウンロードする．
+\section{アプリケーションの実行}
+※実行したら書きます．
 \section{実験結果}
+※結果出たら書きます．
 %
 %========考察========================================================================
 \chapter{考察}
-本章では，ハードウェア実装した前処理の性能に対する考察と，本研究の今後の展望についての考察を
-述べる．
+本章では，ハードウェア実装した前処理の性能に対する考察と，本研究の今後の展望についての考察を述べる．
 
-まず，ハードウェア実装した前処理の性能に対する考察を述べる
+まず，ハードウェア実装した前処理の性能に対する考察を述べる.
+※実験終わったら書きます
 
 次に，本研究の今後の展望について考察を述べる．本研究では，物体検出における前処理の部分の中でも，
 特にリサイズの処理に対して焦点を当てた．しかし実際の前処理では，リサイズだけの処理をするわけではなく，
@@ -499,13 +552,14 @@ resizeを選択する．作成したソースコードを以下に示す．
 本研究を進めるにあたって，はじめに開発ツールであるVivado，Petalinux，Vitisの使用方法について学習を行った．
 その後，プラットフォームの作成，アプリケーションの作成，FPGAボードでの実験，性能評価の順で実行した．
 
-本研究の結果．．．
+本研究の結果
+※実験終わったら書きます
 
 しかし，ハードウェア実装できた前処理はリサイズ処理のみであり，さらに高速化を図るためには，その他の前処理についても
 ハードウェア実装する必要がある．加えてエッジデバイスにおけるリアルタイム性以外の課題であるリソース使用率や消費電力については
 検証できていないので，これらの項目についても検証する必要がある．
-また，先に述べた開発ツールを利用するにあたって，ハードウェアとソフトウェアの開発に関する知識の両方が必要となるため，
-ツールを扱えるようになるまで多くの時間を必要とする．
+%また，先に述べた開発ツールを利用するにあたって，ハードウェアとソフトウェアの開発に関する知識の両方が必要となるため，
+%ツールを扱えるようになるまで多くの時間を必要とする．
 以上の課題を解決することで，物体検出におけるリアルタイム性の向上につながると考える．
 
 %=====================================================================================
@@ -524,6 +578,12 @@ resizeを選択する．作成したソースコードを以下に示す．
 \bibliography{bibtexファイル名} %bibtexファイルの読み込み
 \bibliographystyle{junsrt} %本文に\cite{}を入れることで，参考文献表示
 \begin{thebibliography}{99}
-  \bibitem{Xilinx-platform} Xilinx, \\Vitis 統合ソフトウェアプラットフォームの資料：エンベデッドソフトウェア開発, \\2020-06-24, \\\url{https://docs.xilinx.com/r/2020.1-日本語/ug1400-vitis-embedded}, \\参照2023-01-18
+  \bibitem{AccelTemp} 小西祥之，国宗大介，西田芳隆，ミラクシアエッジテクノロジー株式会社， \\2021, \\"物体検出におけるエッジ環境での推論高速化と精度上昇"， \\\url{https://www.jstage.jst.go.jp/article/pjsai/JSAI2021/0/JSAI2021_3I4GS7a02/_pdf/-char/ja}, \\（参照2023-01-19）
+  \bibitem{OpenCV} ケイエイブル株式会社， \\"初めてのOpen CV（画像処理ライブラリ）ガイド" \\\url{https://www.klv.co.jp/corner/python-opencv-what-is-opencv.html}, \\（参照2023-01-19）
+  \bibitem{boardinfo} AVNET, \\"Ultra96開発ボードでXilinx Zynq UltraScale+ MPSoCを手軽に評価", \\\url{https://www.avnet.com/wps/portal/japan/products/product-highlights/ultra96/}, \\（参照2023-01-19）
+  \bibitem{VitisPlatform} Xilinx, \\"Vitis 統合ソフトウェアプラットフォーム，プラットフォームベースフロー", \\\url{https://japan.xilinx.com/products/design-tools/vitis/vitis-platform.html}, \\（参照2023-01-19）
+  \bibitem{Xilinx-platform} Xilinx, \\"Vitis 統合ソフトウェアプラットフォームの資料：エンベデッドソフトウェア開発", \\2020-06-24, \\\url{https://docs.xilinx.com/r/2020.1-日本語/ug1400-vitis-embedded}, \\（参照2023-01-18）
+  \bibitem{SamplePictWeb} Qiita, \\"Vitis-AI v1.4 on Ultra96v2", \\2021-11-06, \\url{https://qiita.com/lp6m/items/4117a3bab185afedfd5f}, \\（参照2023-01-19）
+  \bibitem{SamplePictDrive} Google Drive, \\"Mask_Dataset", \\2020-02-26, \\url{https://drive.google.com/drive/folders/1aAXDTl5kMPKAHE08WKGP2PifIdc21-ZG}, \\（参照2023-01-19）
 \end{thebibliography}
 \end{document}
