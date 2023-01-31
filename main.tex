@@ -55,7 +55,7 @@
 \
 \vspace{3cm}
 
-{\huge{Vitis Vision Libraryを用いた前処理の\\
+{\huge{Vitis Vision Libraryを用いた画像処理の\\
 ハードウェア実装と性能評価}}
 
 \vspace{9mm}
@@ -120,21 +120,25 @@ IoT機器における処理全体に要する時間の短縮に成功してい�
 CPU性能やメモリ容量といったリソースが劣る．こうした現状から，限られたリソースの中で，
 処理速度やリソース使用量などのパフォーマンスをどれだけ向上させられるかが課題となっている．
 
-また，物体検出に関する研究では，推論処理における高速化が盛んである．その高速化手法\cite{AccelTemp}は，
-主流な方法である量子化をはじめ，レイヤフュージョン，デバイス最適化，マルチスレッド化など
-さまざまである．しかし，物体検出の流れとしてはじめに入力画像に対する前処理の工程があり，
-この工程における高速化の研究は少ない．実際に物体検出の前処理と推論処理では，推論処理に要する
-処理時間の方が前処理に要する処理時間より大きくなるのは周知の事実ではあるが，今後さらに
-推論処理の高速化が進んでくると，高速化された推論処理に対して，その前に処理速度の遅い前処理の工程が
+物体検出の流れとしてはじめに入力画像に対する前処理を行し，ここで整形された画像データを用いて
+推論処理を行う．これらの工程において，入力画像に対する前処理よりも，推論処理の方が処理に要する
+時間が大きくなる．そのため，前処理に対する高速化の研究よりも推論処理に対する高速化の研究の方が
+盛んである．推論処理に対する高速化手法\cite{AccelTemp}は，主流な方法である量子化をはじめ，
+レイヤフュージョン，デバイス最適化，マルチスレッド化などさまざまである．
+今後さらに推論処理の高速化が進んでくると，高速化された推論処理に対して，その前に処理速度の遅い前処理の工程が
 入ってくるため，折角高速化した推論処理のパフォーマンスを最大限に発揮できなくなってしまう恐れがある．
-こうした点から本研究では推論処理の前処理の工程に対して高速化を進めていく．
 
 加えて，エッジコンピューティングにおいて注目すべきはそのエッジデバイスである．
-FPGA（Field Programmable Gate Array）は集積回路の一種であり，様々なエッジデバイスに搭載され用いられている．
-その大きな特徴として現場で論理回路の構成を書き換え可能である点が挙げられ，こうした特徴から，FPGAはCPUと比較しても
-大量のデータを高速に処理し，さらに消費電力が低いという利点がある．以上の点から，リアルタイム性を重要視している
-エッジデバイスでの画像処理に対してFPGAを用いることは，先に述べた課題に対する有効的な解決策となるといえる．
+FPGA（Field Programmable Gate Array）は，様々なエッジデバイスに搭載され用いられている．
+その大きな特徴として現場で論理回路の構成を書き換え可能である点が挙げられ，こうした特徴から，FPGAは
+大量のデータを高速に処理し，さらに消費電力が低いという利点がある．
+%以上の点から，リアルタイム性を重要視している
+%エッジデバイスでの画像処理に対してFPGAを用いることは，先に述べた課題に対する有効的な解決策となるといえる．
 
+以上の点から，本研究では，物体検出におけるリアルタイム性を課題として取り上げ，入力画像に対する前処理を
+高速化することを目的とする．目的達成のための方法としてFPGAを用いたハードウェアアクセラレーションを用いる．
+高速化した前処理と，そうでない前処理に対して処理速度の計測を行い，ハードウェアアクセラレーションによりどの程度
+処理時間を短縮できたかを検証する．
 
 \section{論文の構成}
 ※全体が完成したら書きます．
@@ -144,7 +148,7 @@ FPGA（Field Programmable Gate Array）は集積回路の一種であり，様�
 %開発環境，開発フロー及び
 %
 %========予備知識=========================================================================
-\chapter{予備知識}
+\chapter{準備}
 本章では，この論文を読むにあたって理解しておく必要のある予備知識について記述する．
 \section{画像処理}
 \subsection{物体検出}
@@ -223,43 +227,50 @@ FPGAはField Programmable Gate Arrayの略称であり，日本語に直訳す�
 以上の機能を持つことからも，自動車，医療，製造業，放送，通信などの幅広い分野で利用されている．
 
 \section{ハードウェアアクセラレーション}
-通常，CPU(PS:Processing System)によって処理されるプログラムが，処理速度や消費電力など課題を抱えている場合に，
-こうした処理のための専用ハードウェア(PL:Programmable Logic)を構成することで処理を援助し，高速化を図る手法のこと．
+ここでは，ハードウェアアクセラレーション\cite{HWAccel}の概要を示す．
+CPU(PS:Processing System)は複雑な制御に優れているが，膨大なデータ処理を必要とするアプリケーションには最適とは限らない．
+こうした課題を抱えているアプリケーションに対して，アプリケーション内の大量の演算処理が必要な部分を切り離し，その処理のために
+構成した専用ハードウェア(PL:Programmable Logic)で処理を行うことで高速化を図る手法のことをハードウェアアクセラレーションと呼ぶ．
 
 本研究では，物体検出における前処理に対してハードウェアアクセラレーションをすることで，処理の高速化を図る．
 %
 %========エッジAIプラットフォーム開発=================================================================
 \chapter{エッジAIプラットフォーム開発}
+本章ではVitisと呼ばれるツールを用いてハードウェアアクセラレーションアプリケーション開発のための
+プラットフォームについて述べる．
 \section{Vitis プラットフォーム概要}
-Vitis プラットフォームは，外部メモリインターフェイス，カスタム入出力インターフェイス，ソフトウェアランタイムなど，
+Vitis プラットフォーム\cite{VitisPlatform}は，外部メモリインターフェイス，カスタム入出力インターフェイス，ソフトウェアランタイムなど，
 AMDザイリンクスプラットフォームのハードウェアやソフトウェアのベースアーキテクチャおよびアプリケーションコンテキストを
 定義する．
+Vitis プラットフォームの特徴およびメリットとして，同じプラットフォーム上で異なるアクセラレーションアプリケーションを
+入れ替え可能な点，最小限の操作で異なるプラットフォーム間でアプリケーションを移植可能な点が挙げられる．
+本研究では，こうした特徴を利用するためにVitis プラットフォームを作成し，そのプラットフォーム上で画像処理用アプリケーションを
+作成する．
 
-Vitis プラットフォーム\cite{VitisPlatform}を使用する設計書法は様々なメリットをもたらし，生産性の向上につながる．特徴を以下に列挙する．
-\begin{quote}
-  \begin{itemize}
-    \item プラットフォームの再利用性：同じプラットフォーム上で異なるアクセラレーションアプリケーションを入れ替え可能
-    \item アプリケーションの移植性：最小限の操作で異なるプラットフォーム間でアプリケーションを移植可能
-    \item シミュレーション時間：カーネルを使用する協調シミュレーションの高速化
-    \item ランタイム：オープンソースのランタイムを使用してPCle®インターフェイスまたはエンベデッドインターフェイス経由でホストとデバイス間の通信を制御
-    \item システムデバッグ：システム全体の協調シミュレーションによって，全ハードウェアコンパイル時間を短縮
-  \end{itemize}
-\end{quote}
+%\begin{quote}
+%  \begin{itemize}
+%    \item プラットフォームの再利用性：同じプラットフォーム上で異なるアクセラレーションアプリケーションを入れ替え可能
+%    \item アプリケーションの移植性：最小限の操作で異なるプラットフォーム間でアプリケーションを移植可能
+%    \item シミュレーション時間：カーネルを使用する協調シミュレーションの高速化
+%    \item ランタイム：オープンソースのランタイムを使用してPCle®インターフェイスまたはエンベデッドインターフェイス経由でホストとデバイス間の通信を制御
+%    \item システムデバッグ：システム全体の協調シミュレーションによって，全ハードウェアコンパイル時間を短縮
+%  \end{itemize}
+%\end{quote}
 \section{Vitis プラットフォーム開発環境とツール}
 \begin{quote}
   \begin{itemize}
     \item Ubuntu18.04.3 LTS・・・
     LinuxOSのUbuntuを用いた．開発ツールであるVivado，PetaLinux，Vitisのバージョンに対応させてUbuntuのバージョンは
     18.04を採用している．
-    \item Vivado-v2020.1・・・
+    \item Vivado-v2019.2・・・
     Xilinxが提供するハードウェア設計ツール．HDLからビットストリームの生成，FPGAへの書き込みまでの開発における下位の部分
     を担当する．
-    \item PetaLinux-v2020.1・・・
-    Xilinxが提供するツール．Xilinxのプロセッシングシステム上で組み込みLinuxのソリューションをカスタマイズ，ビルド，
-    およびデプロイするために必要なモノを全て提供する．設計生産性の加速を目的とするこのソリューションは，Xilinxの
-    ハードウェア設計ツールと連動し，Versal，Zynq UltraScale+ MPSoP，Zynq-7000，およびMicroBlaze向けのLinuxシステム
-    の開発を容易にする．
-    \item Vitis-v2020.1・・・
+    \item PetaLinux-v2019.2・・・
+    XilinxがYocto ProjectをベースとしてZynqシリーズ用にカスタマイズしたLinuxディストリビューションを構築する提供するフレームワーク．
+    Xilinxのプロセッシングシステム上で組み込みLinuxのソリューションをカスタマイズ，ビルド，およびデプロイするために必要なモノを全て提供する．
+    設計生産性の加速を目的とするこのソリューションは，Xilinxのハードウェア設計ツールと連動し，Versal，Zynq UltraScale+ MPSoP，Zynq-7000，
+    およびMicroBlaze向けのLinuxシステムの開発を容易にする．
+    \item Vitis-v2019.2・・・
     Xilinxが提供するVitis統合ソフトウェアプラットフォーム．ツール内容を以下に述べる．
     \begin{quote}
       \begin{itemize}
@@ -279,72 +290,80 @@ Vitis プラットフォーム\cite{VitisPlatform}を使用する設計書法は
 \begin{figure}[H]
   \center
   \includegraphics[scale = 0.8]{pict/pict.jpg}
-  \caption{プラットフォーム作成フロー}
+  \caption{Vitis プラットフォーム作成フロー}
 \end{figure}
-プラットフォームの作成は図3.1プラットフォーム作成フローに従って行い，
-以下に示す工程はXilinx提供のユーザガイド\cite{Xilinx-platform}を参考にして実行する．
-また，Ultra96v2向けプラットフォームがavnet社より提供されているので，
-このプラットフォームを用いても良いのだが，カーネル作成時にライブラリの
-追加などを行う必要があるため，avnet社が提供しているプラットフォームの内，
-ハードウェア構成が構築されているXSAファイルのみを引用する．そのため，
-1.HW Componentの工程は省略する．図3.2に引用するXSAファイルのBlockDesignを示す．
+図3.1はプラットフォーム作成フローを示している．
+はじめにVivadoを用いてハードウェアの構成を行い，XSAファイルとして出力する．この工程をHW Componentとする．
+次にPetaLinuxを用いて，Ultra96v2上でLinuxカーネルを起動するためのファイル(Boot image)およびヘッダ，ライブラリが格納されている
+rootディレクトリ(sysroot)の作成を行う．この工程をSW Componentとする．
+最後にHW ComponentとSW Componentの成果物をVitisで読み込んでVitis プラットフォームを作成する．この工程をVitis Target Platformとする．
+ここで示した開発フローを，Xilinx提供のユーザガイド\cite{Xilinx-platform}を参考にして実行する．
+
+\subsection{HW Component}
+ここではハードウェアの構成を行う．
+Vivadoを起動し，プロジェクト名をu96v2とした．
+
+はじめに，BlockDesignと呼ばれる回路の設計を行う．
+図3.2に作成したBlockDesignを示す．
 \begin{figure}[H]
   \center
-  \includegraphics[scale = 0.8]{pict/pict2.jpg}
+  \includegraphics[scale = 0.4]{pict/pict2.jpg}
   \caption{HW BlockDesign}
 \end{figure}
 図3.2中の配線によって繋がれているブロックの部分をIP(Intellectual Property)
-と呼び，FPGA業界では，既に設計された設計資産，の意味で使用される．
-回路設計を行うユーザの視点からすると，既に設計された回路ライブラリを表す．
-こうしたIPを利用することにより，容易な回路設計を実現している．
-図3.2に示したBlockDesignの各IPを表3.1に列挙する．
+と呼び，このブロックは既に設計された回路モジュールを表している．
+Ultra96v2ボードにはZynq UltraScale+ MPSoCと呼ばれるIPが搭載されている．
+このIPはPS(Processing System)とPL(Programmable Logic)の部分に分かれており，
+他のIPに対してクロックとリセットの供給を行う．作成したBlockDesignでは，
+Zynq UltraScale+ MPSoCの出力クロックと出力リセットをClking Wizardに供給する．
+Clocking WizardはPL部分にクロックの供給を行い，その出力周波数を指定することができる．
+Clocking Wizardのクロック出力数はProcessor System Resetの数に合わせて5つに指定する．
+またProcessor System Resetへのリセット入力はZynq UltraScale+ MPSoCの出力リセットから供給する．
+図3.2に示したBlockDesignにおけるIPの種類，IPの名称，IPの入出力についてを表3.1に示す．
 \begin{table}[H]
-  {\scriptsize
   \caption{BlockDesignにおけるIP}
   \label{table:SpeedOfLight}
   \centering
-   \begin{tabular}{clll}
+   \begin{tabular}{llll}
     \hline
-    番号 & IP種類 & IP名称 & 出力端子 \\
+    IP種類 & IP名称 & 入力 & 出力 \\
     \hline \hline
-    1 & Zynq UltraScale++ MPSoC & zynq_ultra_ps_e_0 & \\
-    2 & Processor System Reset & rst_ps8_0_100M & \\
-    3 & Concat & xlconcat_0 & \\
-    4 & Clocking Wizard & clk_wiz_0 &\\
-    5 & Processor System Reset & proc_sys_reset_0 & \\
-     & Processor System Reset & proc_sys_reset_1 & \\
-     & Processor System Reset & proc_sys_reset_2 & \\
-     & Processor System Reset & proc_sys_reset_3 & \\
-     & Processor System Reset & proc_sys_reset_4 & \\
-     & Processor System Reset & proc_sys_reset_5 & \\
-     & Processor System Reset & proc_sys_reset_6 & \\
-    6 & AXI BRAM Controller & axi_bram_ctrl_0 & \\
-    7 & Block Memory Generator & axi_bram_ctrl_0_bram & \\
-    8 & AXI GPIO & axi_gpio_2 & wifi_en_led, bt_en_led\\
-    9 & System Management Wizard & system_management_wiz_0 & \\
-    10 & AXI GPIO & axi_gpio_1 & fan_pwm \\
-    11 & & PWM_w_lnt_0 & ls_mezz_pwm0[0:0] \\
-    12 & AXI GPIO & axi_gpio_0 & ls_mezz_rst[1:0] \\
-    13 & & PWM_w_lnt_1 & ls_mezz_pwm1[0:0] \\
-    14 & AXI UART166550 & axi_uart166550_0 & ls_mezz_uart0_tx \\
-    15 & AXI Interrupt Controller & axi_intc_0 & \\
-    16 & AXI UART166550 & axi_uart166550_1 & ls_mezz_uart0_tx \\
-    17 & Slice & xlslice_0 & hs_mezz_csi0_c[1:0] \\
-    & Slice & xlslice_1 & hs_mezz_csi0_d[7:0] \\
-    & Slice & xlslice_2 & hs_mezz_csi1_c[1:0] \\
-    & Slice & xlslice_3 & hs_mezz_csi1_d[3:0] \\
-    & Slice & xlslice_4 & hs_mezz_csi0_c[1:0] \\
-    & Slice & xlslice_5 & hs_mezz_csi1_d[3:0] \\
-    & Slice & xlslice_6 & hs_mezz_dsi_mclk[0:0] \\
-    & Slice & xlslice_7 & hs_mezz_dsi_clk[1:0] \\
-    & Slice & xlslice_8 & hs_mezz_dsi_d[7:0] \\
-    & Slice & xlslice_9 & hs_mezz_hsic_d[0:0] \\
+    Zynq UltraScale++ MPSoC & zynq_ultra_ps_e_0 & dout[0:0] & pl_resetn0 \\
+    & & & pl_clk0 \\
+    \hline
+    Concat & xlconcat_0 & & dout[0:0] \\
+    \hline
+    Clocking Wizard & clk_wiz_0 & pl_resetn0 & clk_out1 \\
+    & & pl_clk0 & clk_out2 \\
+    & & & clk_out3 \\
+    & & & clk_out4 \\
+    & & & clk_out5 \\
+    & & & locked \\
+    \hline
+    Processor System Reset & proc_sys_reset_0 & clk_out1 & \\
+    & & locked & \\
+    & & pl_resetn0 & \\
+    \hline
+    Processor System Reset & proc_sys_reset_1 & clk_out2 & \\
+    & & locked & \\
+    & & pl_resetn0 & \\
+    \hline
+    Processor System Reset & proc_sys_reset_2 & clk_out3 & \\
+    & & locked & \\
+    & & pl_resetn0 & \\
+    \hline
+    Processor System Reset & proc_sys_reset_3 & clk_out4 & \\
+    & & locked & \\
+    & & pl_resetn0 & \\
+    \hline
+    Processor System Reset & proc_sys_reset_4 & clk_out5 & \\
+    & & locked & \\
+    & & pl_resetn0 & \\
   \hline
   \end{tabular}
-  }
 \end{table}
 FPGAではFPGA内部のロジックに供給するクロックを指定する必要がある．
-その機能を有しているIPが図3.2中の4番目のIPであるClocking Wizardであり，
+その機能を有しているIPが図3.2中のClocking Wizardであり，
 実際に出力されるクロックの詳細について表3.2に示す．
 \begin{table}[H]
   \caption{Clocking Wizardによる出力クロック}
@@ -356,48 +375,97 @@ FPGAではFPGA内部のロジックに供給するクロックを指定する必
     \cmidrule(lr){2-3}
      & 要求 & 実際 \\
     \hline
-    clock_out1 & 150 & 150 \\
-    clock_out2 & 300 & 300 \\
-    clock_out3 & 75 & 75 \\
-    clock_out4 & 100 & 100 \\
-    clock_out5 & 200 & 200 \\
-    clock_out6 & 400 & 400 \\
-    clock_out7 & 600 & 600 \\
+    clock_out1 & 100 & 100 \\
+    clock_out2 & 200 & 200 \\
+    clock_out3 & 300 & 300 \\
+    clock_out4 & 400 & 400 \\
+    clock_out5 & 600 & 600 \\
     \hline
     \end{tabular}
 \end{table}
+以上のBlockDesignの作成を終了し，u96v2.xsaというファイル名で保存することでここでの工程は終了する．
 
-2.SW Componentの工程に移る．この工程ではPetalinuxツールを用いて作業を行う．
-はじめに，petalinux projectを作成する．ここでは，後のカーネルおよびrootfsの設定を省略するため
-avnet社の提供しているUltra96v2専用のBoard Support Packageファイルを用いてプロジェクトを立ち上げる．
-次に1.HW Componentで示したXSAファイルからハードウェアコンポーネントの情報を取り込む．
-最後にrootfsの設定として，利用するuser package，opencv，pythonのライブラリを有効にする．
-以上の設定を経て，PetaLinuxプロジェクトのビルドを行う．ビルドを行うことで，設定したLinuxカーネル並びにsdk.shの生成を行う．
-生成したsdk.shを自己解凍することでsysrootが生成される．
-以下に2.SW Componentにおける成果物のうち，後のVitis Target Platformの作成とVitis applicationの作成で
-用いるファイルおよびディレクトリを列挙する．
+\subsection{SW Component}
+この工程ではPetalinuxを用いて作業を行う．Petalinuxの保持しているツールの中で本研究で用いるのは，
+petalinux-create，petalinux-config，petalinux-buildである．
+
+はじめに，プロジェクト名をu96v2としてpetalinux projectの専用ディレクトリを作成する．プロジェクトの作成には
+petalinux-createツールを使用する．petalinux project内でなければPetalinuxの保持するツールが利用できないため，
+以降はこのディレクトリ内でSW Componentの工程を行う．
+
+作成したディレクトリに移動し，petalinux-configツールを用いてu96v2.xsaからハードウェアコンポーネントの情報の
+アップデート，Linuxカーネルの設定，rootディレクトリの設定の順で行う．
+
+はじめに，ハードウェア情報のアップデートにおける作業を述べる．
+Ultra96v2を起動するには，起動用データをSDカードに格納し，それをUltra96v2に挿入することで起動させる．
+ここで，rootディレクトリとしてSDカードに格納されるファイルはEXT型である必要があるため，Root filesystem typeを
+EXTに設定する．
+次に，PetalinuxのベースはYocto Projectであるため，Yoctoの設定でデバッグを有効にする．
+最後にUARTの設定を行う．Ultra96v2はシリアル通信における標準入出力をUART1で行うため，psu_uart_1を指定する．
+以上の変更を保存してハードウェア情報のアップデートは終了する．
+
+次にLinuxカーネルの設定について述べる．ここではデバイスドライバのサイズをデフォルト値が254MBだったため1024MBに変更した．
+
+加えて，Petalinuxプロジェクトの中にuser-rootfsconfigというファイルがある．rootファイルシステムに含めるパッケージを管理する．
+このファイルに，ホストとアクセラレータの通信を容易にするソフトウェアインターフェイスであるXRT(Xilinx Runtime Library)，
+Linuxカーネルドライバであるzocl，複数の異なる計算用リソースを併用するために用いるOpenCL，画像処理ライブラリであるOpenCVの項目を追加する．
+ここで追加したzoclドライバをデバイスツリーに含める．デバイスツリーはsystem-user.dtsiというファイルに記述されているため，このファイルを編集して
+zoclを追加した．
+
+最後にrootディレクトリの設定を行う．ここでは作成したアプリケーションを動かすために必要となるライブラリを有効にする．
+具体的にはgccランタイムのC++，Python3，OpenCV，user packageを有効にする．
+以上でPetalinux-configツールを用いた設定を終了する．
+
+最後に，設定したPetaLinuxプロジェクトの内容を参照して実際にLinuxカーネルおよびsysrootの生成を行う．
+この作業はpetalinux-buildツールを用いる．ここでは複数のファイルが生成されるが，その中にsdk.shというファイルがある．
+これは自己解凍ファイルであり，このファイルを実行し，自己解凍することでsysrootディレクトリが生成される．
+ここまで，Linuxカーネルを起動するためのコンポーネントを作成してきた．これらのコンポーネント構造をまとめるファイルが必要である．
+そのファイル名をlinux.bifとして作成する．
+以下にSW Componentにおける成果物のうち，後のVitis Target Platformの作成で用いるファイルおよびディレクトリを列挙する．
 \begin{quote}
   \begin{itemize}
     \item bl31.elf
     \item image.ub
     \item pmufw.elf
     \item u-boot.elf
-    \item fsbl.elf
+    \item zynqmp_fsbl.elf
     \item system.dtb
     \item linux.bif
-    \item rootfs.ex4
     \item sysroot
   \end{itemize}
 \end{quote}
-上記の生成物の内，bl31.elf，image.ub，pmufw.elf，u-boot.elf，fsbl.elf，system.dtb，linux.bifを
-bootディレクトリにまとめて管理する．
+新たにbootという名前のディレクトリを作成し，上記の生成物の内，
+bl31.elf，image.ub，pmufw.elf，u-boot.elf，fsbl.elf，system.dtbを格納してまとめて管理する．
 
-1.HW Componentと2.SW Componentの工程で得られた成果物とVitisツールを用いて
-Vitis Target Platformの作成を行う．Vitisを起動後，1.HW Componentで示したXSAファイルを選択して，
-Platform Projectを作成する．Domein設定を開き，OSをLinux，Processorをpsu_cortex53に指定する．
-加えてBifファイルをlinux.bif，Boot Components DirectoryおよびLinux Image Directoryをbootディレクトリ，
-rootfs fileをrootfs.ex4，Sysroot Directoryにsysroots/aarch64-xilinx-linuxディレクトリを指定した．
-最後にBoard Support Packageの設定を行い，プラットフォームをビルドすることでプラットフォーム作成を完了する．
+\subsection{Vitis Target Platform}
+HW ComponentとSW Componentの工程で得られた成果物とVitisツールを用いて
+Vitis Target Platformの作成を行う．設定項目と設定内容を表\ref{vtpset}に示す．
+\begin{table}[H]
+  \caption{Vitis Target Platform初期設定}
+  \label{vtpset}
+  \centering
+  \begin{tabular}{ll}
+    \hline
+    項目 & 内容 \\
+    \hline
+    XSA_file & u96v2.xsa\\
+    OS & Linux \\
+    Processor & psu_cortexa53\\
+    Bif file & linux.bif \\
+    Boot Component Directory & boot \\
+    Linux Image Directory & boot \\
+    Sysroot Directory & sysroot/aarch6464-xilinx-linux \\
+    \hline
+    \end{tabular}
+\end{table}
+表\ref{vtpset}の設定内容について記述する．
+Vitisを起動後，HW Componentで示したXSAファイルを選択して，
+Platform Projectを作成する．Domein設定を開き，OSをLinux，Processorをpsu_cortexa53に指定する．
+加えてBifファイルをlinux.bif，Boot Components DirectoryおよびLinux Image DirectoryをSW Componentの
+工程でまとめたbootディレクトリ，Sysroot Directoryにsysroots/aarch64-xilinx-linuxディレクトリを指定した．
+以上の設定後，Vitisツール上でビルドボタンを押すことで，設定内容をまとめてVitis Target Platformとして出力される．
+ここで作成したプラットフォームが格納されているディレクトリ名をu96v2_pfmとした．
+ここで作成したVitis Target Platformを用いて第4章のアプリケーション開発を行う．
 
 \section{Vitis Vision Library}
 FPGA用の画像データ前処理アプリケーションはVitisというツールで作成するため，Vitisツール専用のライブラリを用いる必要がある．
@@ -416,9 +484,11 @@ Vitis Vision Libraryの特徴を以下に列挙する．
 %
 %========アプリケーションの実装=================================================================
 \chapter{アプリケーションの実装}
-本研究では物体検出における画像前処理アプリケーションを作成する．
-PSのみを利用して処理を行うアプリケーションと
-PSとPLを用いて処理を行うアプリケーションの作成を行う．
+本章では物体検出における画像前処理アプリケーションを作成について述べる．
+Ultra96v2のようなFPGAボードには基本的なシステム全体の制御を行うPS(Processing System)部分と
+特定の演算処理などに用いられるPL(Programmable Logic)部分が存在する．
+本研究では，PSのみを利用して処理を行うアプリケーションと
+PSに加えてPLを用いて処理を行うアプリケーションの作成を行う．
 \section{アプリケーション作成(PS)}
 実行時にPSのみを用いて画像の前処理を行うアプリケーションの作成について述べる．
 このアプリケーションのソースコードはPythonで記述しており，
@@ -477,9 +547,12 @@ re_hとre_wを引数として渡すことでリサイズ処理を行う．
 %行っている．
 
 \section{アプリケーション作成(PS+PL)}
-PSとPLを用いるアプリケーションの作成は，3章で作成したプラットフォームを利用して行う．
-Vitisを起動し，プラットフォームの選択を行い，その後サンプルからVitis Vision Libraryの
-resizeを選択する．作成したソースコードを以下に示す．
+PSに加えてPLを用いるアプリケーションの作成は，3章で作成したVitis Target Platformである
+u96v2_pfmを利用して行う．
+Vitisツールを起動し，プラットフォームをu96v2_pfmに指定した．
+その後サンプルからVitis Vision Libraryを選択する．Vitis Vision LibraryはOpenCVの機能の一部を有しており，
+それをVitisツールで利用できる形にカスタマイズされたライブラリである．
+そのライブラリの中からresizeを選択する．作成したソースコードを以下に示す．
 
 ※完成したら書きます
 
@@ -488,9 +561,9 @@ resizeを選択する．作成したソースコードを以下に示す．
 %
 %========ここにソースコードの説明
 %
-アプリケーションの作成が完了すると新たにSD_Card.imgが生成される．
 %========評価実験=======================================================================
 \chapter{評価実験}
+本章ではこれまでに作成してきたアプリケーションの実行するまでの準備，実行手順，実験結果について述べる．
 \section{実験準備}
 \subsection{データセット}
 実験に用いるサンプル画像は，Vitis-AIのUltra96v2上動作に関する記事\cite{SamplePictWeb}に記載されている
@@ -503,16 +576,38 @@ resizeを選択する．作成したソースコードを以下に示す．
 \end{figure}
 
 \subsection{SD_Cardの作成}
-Ultra96v2で扱うMicroSDカードに，作成したデータを書き込む方法について図5.2に示す．
+Ultra96v2は起動イメージとrootディレクトリを異なるのパーティションに格納する必要がある．
+そのため，MicroSDカードを2つのパーティションに分割する．分割の概要について表\ref{SDpartition}に示す．
+\begin{table}[H]
+  \caption{MicroSDのパーティション分割}
+  \label{SDpartition}
+  \centering
+  \begin{tabular}{|c|l|l|}
+    \hline
+    項目 & 第1パーティション & 第2パーティション \\
+    \hline \hline
+    名称 & boot & rootfs \\
+    ファイルシステム & FAT32 & ext4 \\
+    サイズ & 4GB & 28GB \\
+    \hline
+    \end{tabular}
+\end{table}
+表\ref{SDpartition}のように，第1パーティションの名称をboot，ファイルシステムはFAT32，サイズは4GBに指定した．
+続いて，第2パーティションの名称はrootfs，ファイルシステムはext4，サイズは28GBに指定した．
+名称はそれぞれの格納するファイルを表している．
+また，Ultra96v2にはZynq UltraScale+ MPSoCと呼ばれるデバイスが搭載されている．このデバイスはFATファイルシステムにある起動用ファイル
+を呼び出すことで起動する．
+サイズは，格納するファイルのサイズに合わせて指定してある．
+次に，作成したデータの書き込みについて図5.2に示す．
 \begin{figure}[H]
   \center
   \includegraphics[scale = 0.7]{pict/pict6.jpg}
-  \caption{Mask Dataset Sample Picture}
+  \caption{SDカードへのデータ格納}
 \end{figure}
-作成したデータの書き込みにはbalenaEtcherというツールを用いる．このツールを用いてSD＿Card.imgをMicroSDカードに書き込むことで
-自動的にMicroSDカードのパーミッションが割り当てられる．
-MicroSDカードに書き込まれたデータを以下に列挙する．
-※実際に書き込んだら記述します．
+第1パーティションであるbootには図5.2に示している9つのファイルを書き込む．
+第2パーティションであるrootfsにはLinuxシステムのrootファイルを書き込む．
+同時に，作成したUltra96v2上のデバイスのうち，PS(Processing System)のみで処理を行う画像処理
+アプリケーションと実験に用いるサンプル画像のデータセットもこの第2パーティションに書き込む．
 %ディレクトリパスを記述します
 %4章で作成したSD_Cardディレクトリの中身をMicroSDカードの第1パーティション（ディレクトリ名:boot）に，
 %3章のSW Componentで作成したsysrootディレクトリの中のaarch64-xilinx-linuxディレクトリの中身をMicroSDカードの
@@ -555,7 +650,7 @@ Ultra96v2の起動ボタンを押すと，Linuxカーネルが起動する．
 本研究の結果
 ※実験終わったら書きます
 
-しかし，ハードウェア実装できた前処理はリサイズ処理のみであり，さらに高速化を図るためには，その他の前処理についても
+しかし，ハードウェア実装できた物体検出における画像処理はリサイズ処理のみであり，さらに高速化を図るためには，その他の前処理についても
 ハードウェア実装する必要がある．加えてエッジデバイスにおけるリアルタイム性以外の課題であるリソース使用率や消費電力については
 検証できていないのため，これらの項目についても検証する必要がある．
 %また，先に述べた開発ツールを利用するにあたって，ハードウェアとソフトウェアの開発に関する知識の両方が必要となるため，
@@ -568,7 +663,7 @@ Ultra96v2の起動ボタンを押すと，Linuxカーネルが起動する．
 本研究，論文作成を進めるにあたり，御懇篤な御指導，御鞭撻を賜りました本学高橋寛教授ならびに
 甲斐博准教授，王森レイ講師に深く御礼申し上げます．
 
-また，審査頂いた本学（）教授ならびに（）助教授に深く御礼申し上げます．
+また，審査頂いた本学甲斐博准教授，遠藤慶一准教授ならびに宇戸寿幸准教授に深く御礼申し上げます．
 
 最後に，多大な御協力と貴重な御助言を頂いた計算機/ソフトウェアシステム研究室の諸氏に厚く御礼申し上げます．
 %=====================================================================================
@@ -581,6 +676,7 @@ Ultra96v2の起動ボタンを押すと，Linuxカーネルが起動する．
   \bibitem{AccelTemp} 小西祥之，国宗大介，西田芳隆，ミラクシアエッジテクノロジー株式会社， \\2021, \\"物体検出におけるエッジ環境での推論高速化と精度上昇"， \\\url{https://www.jstage.jst.go.jp/article/pjsai/JSAI2021/0/JSAI2021_3I4GS7a02/_pdf/-char/ja}, \\（参照2023-01-19）
   \bibitem{OpenCV} ケイエイブル株式会社， \\"初めてのOpen CV（画像処理ライブラリ）ガイド" \\\url{https://www.klv.co.jp/corner/python-opencv-what-is-opencv.html}, \\（参照2023-01-19）
   \bibitem{boardinfo} AVNET, \\"Ultra96開発ボードでXilinx Zynq UltraScale+ MPSoCを手軽に評価", \\\url{https://www.avnet.com/wps/portal/japan/products/product-highlights/ultra96/}, \\（参照2023-01-19）
+  \bibitem{HWAccel} Xilinx, \\"アクセラレーションコンピューティングとは何か．そしてなぜ必要なのか", \\\url{https://japan.xilinx.com/applications/adaptive-computing/what-is-accelerated-computing-and-why-is-it-important.html}, \\（参照2023-01-29）
   \bibitem{VitisPlatform} Xilinx, \\"Vitis 統合ソフトウェアプラットフォーム，プラットフォームベースフロー", \\\url{https://japan.xilinx.com/products/design-tools/vitis/vitis-platform.html}, \\（参照2023-01-19）
   \bibitem{Xilinx-platform} Xilinx, \\"Vitis 統合ソフトウェアプラットフォームの資料：エンベデッドソフトウェア開発", \\2020-06-24, \\\url{https://docs.xilinx.com/r/2020.1-日本語/ug1400-vitis-embedded}, \\（参照2023-01-18）
   \bibitem{SamplePictWeb} Qiita, \\"Vitis-AI v1.4 on Ultra96v2", \\2021-11-06, \\url{https://qiita.com/lp6m/items/4117a3bab185afedfd5f}, \\（参照2023-01-19）
