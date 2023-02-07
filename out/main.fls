@@ -586,12 +586,22 @@ INPUT extractbb -B cropbox -O pict/pict9.jpg
 INPUT c:/texlive/2022/texmf-dist/fonts/tfm/public/cm/cmtt10.tfm
 INPUT c:/texlive/2022/texmf-dist/fonts/tfm/ptex-fonts/standard/tmin8.tfm
 INPUT c:/texlive/2022/texmf-dist/fonts/tfm/public/cm/cmtt10.tfm
+INPUT c:/texlive/2022/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm
+INPUT c:/texlive/2022/texmf-dist/fonts/tfm/public/cm/cmbx5.tfm
+INPUT c:/texlive/2022/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmmib5.tfm
+INPUT c:/texlive/2022/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmbsy5.tfm
+INPUT c:/texlive/2022/texmf-dist/fonts/tfm/public/amsfonts/symbols/msam5.tfm
+INPUT c:/texlive/2022/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm5.tfm
+INPUT ./pict/pict11.jpg
+INPUT ./pict/pict11.jpg
+INPUT pict/pict11.jpg
+INPUT extractbb -B cropbox -O pict/pict11.jpg
 INPUT ./pict/Mask_1.jpg
 INPUT ./pict/Mask_1.jpg
 INPUT pict/Mask_1.jpg
 INPUT extractbb -B cropbox -O pict/Mask_1.jpg
-INPUT ./pict/pict8.jpg
-INPUT ./pict/pict8.jpg
-INPUT pict/pict8.jpg
-INPUT extractbb -B cropbox -O pict/pict8.jpg
+INPUT ./pict/pict10.jpg
+INPUT ./pict/pict10.jpg
+INPUT pict/pict10.jpg
+INPUT extractbb -B cropbox -O pict/pict10.jpg
 INPUT out/main.aux
