@@ -86,7 +86,11 @@
 
 {\LARGE 計算機/ソフトウェアシステム研究室}\\
 
-\vspace{18mm}
+\vspace{4mm}
+
+{\LARGE 学籍番号：9520315M}
+
+\vspace{12mm}
 
 {\huge 西川　竜矢}\\
 
@@ -97,42 +101,45 @@
 
 % 目次の表示
 \tableofcontents
-
+\thispagestyle{empty}
+\thispagestyle{empty}
 %=====================================================================================
 \pagestyle{fancy}
 \lhead{\rightmark}
+
 \renewcommand{\chaptermark}[1]{\markboth{第\ \normalfont\thechapter\ 章~~#1}{}}
+
 %=====================================================================================
 %
 %========序論=========================================================================
 \chapter{序論} %章
-
+\setcounter{page}{1}
 \section{研究背景}
 
 近年，日常生活を送るうえで多くの場面でIoTが活用されている．また，エッジAIの登場により，
 IoT機器における処理全体に要する時間の短縮に成功している．その中でも，自動車の歩行者検知や
 製造業における外観検査などに使われている技術に物体検出がある．物体検出には高いリアルタイム性
 が求められているが，IoT機器におけるエッジデバイスは推論モデルの学習環境に用いられるPCと比較すると
-CPU性能やメモリ容量といったリソースが劣る．こうした現状から，限られたリソースの中で，
+CPU性能やメモリ容量といったリソースが劣る\cite{EnergyEfficient}．こうした現状から，限られたリソースの中で，
 処理速度やリソース使用量などのパフォーマンスをどれだけ向上させられるかが課題となっている．
 
 物体検出の流れとしてはじめに入力画像に対する前処理を行い，ここで整形された画像データを用いて
 推論処理を行う．これらの工程において，入力画像に対する前処理よりも，推論処理の方が処理に要する
 時間が大きくなる．そのため，前処理に対する高速化の研究よりも推論処理に対する高速化の研究の方が
-盛んである．推論処理に対する高速化手法\cite{AccelTemp}は，主流な方法である量子化をはじめ，
-レイヤフュージョン，デバイス最適化，マルチスレッド化などさまざまである．
+盛んである．推論処理に対する高速化手法は，主流な方法である量子化をはじめ，
+レイヤフュージョン，デバイス最適化，マルチスレッド化などさまざまである\cite{AccelTemp}．
 今後さらに推論処理の高速化が進んでくると，高速化された推論処理に対して，その前に処理速度の遅い前処理の工程が
-入ってくるため，折角高速化した推論処理のパフォーマンスを最大限に発揮できなくなってしまう恐れがある．
+入ってくるため，折角高速化した推論処理のパフォーマンスを最大限に発揮できなくなってしまう恐れがある\cite{hitachi}．
 
 加えて，エッジコンピューティングにおいて注目すべきはそのエッジデバイスである．
 FPGA（Field Programmable Gate Array）は，コンピュータをはじめ通信機器やプリンタなど多くのエッジデバイスに搭載され用いられている．
 その大きな特徴として現場で論理回路の構成を書き換え可能である点が挙げられる．
-また，FPGAは大量のデータを高速に処理し，さらに消費電力が低いという利点がある．
+また，FPGAは大量のデータを高速に処理し，さらに消費電力が低いという利点がある\cite{merit}．
 %以上の点から，リアルタイム性を重要視している
 %エッジデバイスでの画像処理に対してFPGAを用いることは，先に述べた課題に対する有効的な解決策となるといえる．
 
 以上の点から，本研究では，物体検出におけるリアルタイム性を課題として取り上げ，入力画像に対する前処理を
-高速化することを目的とする．目的達成のための方法としてFPGAを用いたハードウェアアクセラレーションを用いる．
+高速化することを目的とする．目的達成のために画像の前処理に対してFPGAを用いたハードウェアアクセラレーションを実装することを目標とする．
 高速化した前処理と，そうでない前処理に対して処理速度の計測を行い，ハードウェアアクセラレーションによりどの程度
 処理時間を短縮できたかを検証する．
 
@@ -153,7 +160,7 @@ FPGA（Field Programmable Gate Array）は，コンピュータをはじめ通�
 本章では，この論文を読むにあたって理解しておく必要のある予備知識について述べる．
 \section{画像処理}
 \subsection{物体検出}
-機械学習を活用して画像に映る特定の物体を検出する技術を物体検出と呼ぶ．
+機械学習を活用して画像に映る特定の物体を検出する技術を物体検出\cite{BK}と呼ぶ．
 物体検出における大まかな流れを図2.1に示す．
 \begin{figure}[H]
   \center
@@ -169,7 +176,7 @@ FPGA（Field Programmable Gate Array）は，コンピュータをはじめ通�
 
 \subsection{物体検出の詳細}
 本研究における物体検出の詳細について示す．
-本研究では推論モデルに，YOLOv3 tinyおよびYOLOv4を想定しており，
+本研究では推論モデルに，YOLOv3 tinyおよびYOLOv4\cite{yolo}を想定しており，
 入力画像に対する前処理はリサイズを行う．
 \begin{figure}[H]
   \center
@@ -205,7 +212,7 @@ OpenCVとはOpen Source Computer Vision Libraryの略称で，Intelが開発し�
 \end{quote}
 
 \section{FPGA}
-本章では，FPGAの概要と本研究で扱うFPGAボードについて述べる．
+本章では，FPGA\cite{fpga}の概要と本研究で扱うFPGAボードについて述べる．
 \subsection{FPGA概要}
 FPGAはField Programmable Gate Arrayの略称であり，日本語に直訳すると「現場で構成可能なゲートアレイ」となる．
 ここで，FPGA上には論理ゲートやトランジスタなどのハードウェアの構成に必要なパーツが搭載されている．
@@ -288,7 +295,7 @@ rootディレクトリをsysrootと表す．Petalinuxを用いてこれらを作
 ここではハードウェアの構成を行う．
 Vivadoを起動し，プロジェクト名をu96v2とした．
 
-はじめに，BlockDesignと呼ばれる回路の設計を行う．
+はじめに，BlockDesign\cite{BD}と呼ばれる回路の設計を行う．
 図3.2に作成したBlockDesignを示す．
 \begin{figure}[H]
   \center
@@ -470,7 +477,7 @@ Platform Projectを作成する．Domein設定を開き，OSをLinux，Processor
 \section{Vitis Vision Library}
 FPGA用の画像データ前処理アプリケーションはVitisというツールで作成するため，Vitisツール専用のライブラリを用いる必要がある．
 Vitisを用いたFPGAアプリケーション開発に対してXilinx社が提供しているライブラリにVitis アクセラレーションライブラリがある．
-このライブラリの一種で，画像処理に対する機能を含んだものがVitis Vision Libraryであり，OpenCVの画像処理関数の多くを含んでいる．
+このライブラリの一種で，画像処理に対する機能を含んだものがVitis Vision Library\cite{vvl}であり，OpenCVの画像処理関数の多くを含んでいる．
 
 %Vitis Vision Libraryの特徴を以下に列挙する．
 %\begin{quote}
@@ -663,7 +670,7 @@ Ultra96v2はOSの起動イメージとrootディレクトリを一つのSDカー
   \includegraphics[scale = 0.7]{pict/pict10.jpg}
   \caption{SDカードへのデータ格納}
 \end{figure}
-第1パーティションであるbootには図5.2に示している10種類ののファイルを書き込む．
+第1パーティションであるbootには図5.2に示している10種類のファイルを書き込む．
 第2パーティションであるrootfsにはLinuxシステムのrootファイルを書き込む．
 同時に，作成したUltra96v2上のデバイスのうち，PS(Processing System)のみで処理を行う画像処理
 アプリケーションと実験に用いるサンプル画像のデータセットもこの第2パーティションに書き込む．
@@ -674,7 +681,7 @@ Ultra96v2はOSの起動イメージとrootディレクトリを一つのSDカー
 必要なファイルの書き込みが完了したので，MicroSDカードをUltra96v2に挿入し，PCとシリアル通信を行う．
 シリアル通信用ツールであるgtktermを起動し，設定画面を開き，ポートを/dev/ttyUSB1に，ボーレートを115200に指定した．
 Ultra96v2の起動ボタンを押すと，Linuxカーネルが起動する．
-最初に，Ultra96v2のWi-Fi設定を行う．設定が完了したら．PS(Processing System)のみを用いて画像処理を行うアプリケーションのために，
+最初に，Ultra96v2のWi-Fi設定を行う．この設定の完了後，PS(Processing System)のみを用いて画像処理を行うアプリケーションのために，
 Python用のOpenCVをダウンロードする．Python3でcv2をインポートできることを確認した．
 また，PS(Processing System)とPL(Programmable Logic)の両方を用いて処理を行うアプリケーションでは，
 XRT(Xilinx Runtime Library)と呼ばれるホストとアクセラレータの通信を行うソフトウェアインターフェイスを用いるため
@@ -686,7 +693,7 @@ XRT(Xilinx Runtime Library)と呼ばれるホストとアクセラレータの�
 作成したPS(Processing System)のみを用いて画像処理を行うアプリケーションを実行する．
 画像処理アプリケーションであるprepro_PS.pyとサンプル画像が格納されているmask_beforeディレクトリのあるディレクトリで以下のコマンドを実行した．
 
-python3 prepro_PS.py ./mask_before/Mask_1.jpg
+python3 prepro_PS.py ./pict/Mask_1.jpg
 
 このコマンドの第1引数の画像の名称を変更して50枚の画像に対して実行した．
 
@@ -787,8 +794,6 @@ PS(Processing System)とPL(Programmable Logic)を用いて画像処理を行う�
 具体的には，No6，No8，No42の画像に見られる．
 処理時間だけを見ると，(b)の場合よりも短くなっている．
 しかし，PSアプリケーションとPS+PLアプリケーションの処理時間を比率で見た場合は，(b)の場合も(c)の場合も変わらない．
-
-以上で実験結果の評価を終わる．
 %
 %========考察========================================================================
 \chapter{考察}
@@ -843,12 +848,21 @@ PS(Processing System)とPL(Programmable Logic)を用いて画像処理を行う�
 \bibliography{bibtexファイル名} %bibtexファイルの読み込み
 \bibliographystyle{junsrt} %本文に\cite{}を入れることで，参考文献表示
 \begin{thebibliography}{99}
-  \bibitem{AccelTemp} 小西祥之，国宗大介，西田芳隆，ミラクシアエッジテクノロジー株式会社， \\2021, \\"物体検出におけるエッジ環境での推論高速化と精度上昇"， \\\url{https://www.jstage.jst.go.jp/article/pjsai/JSAI2021/0/JSAI2021_3I4GS7a02/_pdf/-char/ja}, \\（参照2023-01-19）
+  \bibitem{EnergyEfficient} A. Wheeldon, R. Shafik, T. Rahman, J. Lei, A. Yakovlev, and O.-C. Granmo, \\"Learning automata based energy-efficient AI hardware design for IoT applications," \\Philos. Trans. R. Soc. A Math. Phys. Eng. Sci., \\vol. 378, no. 2182, p. 20190593, Oct. 2020. 
+  J. Misra and I. Saha, \\“Artificial neural networks in hardware: A survey of two decades of progress,” \\Neurocomputing, vol. 74, no. 1, pp. 239-255, 2010.
+  \bibitem{AccelTemp} 小西祥之, 国宗大介, 西田芳隆, ミラクシアエッジテクノロジー株式会社, \\"物体検出におけるエッジ環境での推論高速化と精度上昇"， \\2021, \\\url{https://www.jstage.jst.go.jp/article/pjsai/JSAI2021/0/JSAI2021_3I4GS7a02/_pdf/-char/ja}, \\（参照2023-01-19）
+  \bibitem{hitachi} 橋本恭佑, 伊藤雅博, 株式会社 日立製作所, \\ "機械学習における画像データ前処理の性能検証（後編）", \\2020-05-29, \\\url{https://qiita.com/kyosuke_hashimoto/items/90d7cd5dce0402da55ca}, \\ （参照2023-02-08） 
+  \bibitem{merit} K. Guo, S. Zeng, J. Yu, Y. Wang, H. Yang, \\“A Survey of FPGA-based Neural Network Inference Accelerators,” \\J ACM Trans. Reconfigurable Technol. Syst., \\Vol. 12, No. 1, Article No.: 1, pp. 1-26, Apr. 2019. 
+  \bibitem{BK} MACNICA, \\"物体検出とDeep　Learning ~入門から応用まで~", \\\url{https://www.macnica.co.jp/business/ai/blog/142041/}, \\（参照2023-02-08） 
+  \bibitem{yolo} ∞ReNom, \\"オブジェクト検出 YOLO", \\\url{https://www.renom.jp/ja/notebooks/tutorial/image_processing/yolo/notebook.html}, \\（参照2023-02-08）
   \bibitem{OpenCV} ケイエイブル株式会社， \\"初めてのOpen CV（画像処理ライブラリ）ガイド" \\\url{https://www.klv.co.jp/corner/python-opencv-what-is-opencv.html}, \\（参照2023-01-19）
+  \bibitem{fpga} K. Guo, S. Zeng, J. Yu, Y. Wang, H. Yang, \\"A Survey of FPGA-based Neural Network Inference Accelerators," \\J ACM Trans. Reconfigurable Technol. Syst., \\Vol. 12, No. 1, Article No.: 1, pp. 1-26, Apr. 2019. 
   \bibitem{boardinfo} AVNET, \\"Ultra96開発ボードでXilinx Zynq UltraScale+ MPSoCを手軽に評価", \\\url{https://www.avnet.com/wps/portal/japan/products/product-highlights/ultra96/}, \\（参照2023-01-19）
   \bibitem{HWAccel} Xilinx, \\"アクセラレーションコンピューティングとは何か．そしてなぜ必要なのか", \\\url{https://japan.xilinx.com/applications/adaptive-computing/what-is-accelerated-computing-and-why-is-it-important.html}, \\（参照2023-01-29）
   \bibitem{VitisPlatform} Xilinx, \\"Vitis 統合ソフトウェアプラットフォーム，プラットフォームベースフロー", \\\url{https://japan.xilinx.com/products/design-tools/vitis/vitis-platform.html}, \\（参照2023-01-19）
   \bibitem{Xilinx-platform} Xilinx, \\"Vitis 統合ソフトウェアプラットフォームの資料：エンベデッドソフトウェア開発", \\2020-06-24, \\\url{https://docs.xilinx.com/r/2020.1-日本語/ug1400-vitis-embedded}, \\（参照2023-01-18）
+  \bibitem{BD} Xilinx, \\"Vivado Design Suite ユーザー ガイド: IP インテグレーターを使用した IP サブシステムの設計" \\2020-01-04, \\\url{https://docs.xilinx.com/r/2020.2-%E6%97%A5%E6%9C%AC%E8%AA%9E/ug994-vivado-ip-subsystems/%E6%94%B9%E8%A8%82%E5%B1%A5%E6%AD%B4}, \\（参照2023-02-08）
+  \bibitem{vvl} Xilinx, \\"Vitis　ビジョン ライブラリ", \\ url{https://japan.xilinx.com/products/design-tools/vitis/vitis-libraries/vitis-vision.html}, \\（参照2023-02-08）
   \bibitem{SamplePictWeb} Qiita, \\"Vitis-AI v1.4 on Ultra96v2", \\2021-11-06, \\url{https://qiita.com/lp6m/items/4117a3bab185afedfd5f}, \\（参照2023-01-19）
   \bibitem{SamplePictDrive} Google Drive, \\"Mask_Dataset", \\2020-02-26, \\url{https://drive.google.com/drive/folders/1aAXDTl5kMPKAHE08WKGP2PifIdc21-ZG}, \\（参照2023-01-19）
 \end{thebibliography}
